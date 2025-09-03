@@ -62,7 +62,7 @@ function formatPrayerTimes(data) {
   
   const date = today.date_for || today.date || 'Today';
 
-  return `🕌 *Prayer Times for ${location}*\n📅 ${date}\n\n` +
+  return `🕌 *Prayer Times for ${location}*\n\n📅 ${date}\n\n` +
          `🌅 *Fajr:* ${today.fajr}\n\n` +
          `☀️ *Dhuhr:* ${today.dhuhr}\n\n` +
          `🌤️ *Asr:* ${today.asr}\n\n` +
