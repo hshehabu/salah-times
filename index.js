@@ -273,62 +273,57 @@ bot.on('text', async (ctx) => {
     }
   }
   
-  if (text === '🏙️ My City') {
+  // Handle My City button (both languages)
+  if (text === '🏙️ My City' || text === '🏙️ የኔ ከተማ') {
     if (!savedCity) {
-      const message = `🏙️ *No city saved*\n\n` +
-        `Use button below to save your city.`;
+      const message = `🏙️ *${t('noCitySpecified', lang)}*\n\n${t('useBelowToSave', lang)}`;
       
       const keyboard = Markup.keyboard([
-        ['📍 Set My City'],
-        ['❓ Help']
+        [t('btnSetCity', lang)],
+        [t('btnHelp', lang), t('btnLanguage', lang)]
       ]).resize();
       
       return ctx.replyWithMarkdown(message, keyboard);
     }
     
-    const message = `🏙️ *Your saved city*\n\n` +
-      `Current city: *${savedCity}*\n\n` +
-      `• Tap "🕌 Get Times" for prayer times\n` +
-      `• Tap "📍 Change City" to update`;
+    const message = `🏙️ *${t('yourSavedCity', lang)}*\n\n${t('currentCity', lang)}: *${savedCity}*\n\n${t('tapGetTimes', lang)}\n${t('tapChangeCity', lang)}`;
     
     const keyboard = Markup.keyboard([
-      [`🕌 Get Times for ${savedCity}`],
-      ['📍 Change City'],
-      ['❓ Help']
+      [`${t('btnGetTimes', lang)} ${savedCity}`],
+      [t('btnChangeCity', lang)],
+      [t('btnHelp', lang), t('btnLanguage', lang)]
     ]).resize();
     
     return ctx.replyWithMarkdown(message, keyboard);
   }
   
-  if (text === '📍 Set My City' || text === '📍 Change City') {
+  // Handle Set/Change City buttons (both languages)
+  if (text === '📍 Set My City' || text === '📍 Change City' || 
+      text === '📍 ከተማዬን አዘጋጅ' || text === '📍 ከተማ ቀይር') {
     ctx.session.waitingForCity = true;
     
-    const message = `📍 *Set City*\n\n` +
-      `Send me your city name to save it.\n\n` +
-      `*Examples:* Addis Ababa, New York, Cairo, Istanbul, Mecca`;
+    const message = t('setCity', lang);
     
     return ctx.replyWithMarkdown(message);
   }
   
-  if (text === '❓ Help') {
-    const cityStatus = savedCity ? `Your saved city: *${savedCity}*` : 'No city saved';
+  // Handle Help button (both languages)
+  if (text === '❓ Help' || text === '❓ እገዛ') {
+    const cityStatus = savedCity ? `${t('yourSavedCity', lang)}: *${savedCity}*` : t('noCitySaved', lang);
     
-    const helpMessage = `🕌 *Help*\n\n` +
-      `*How to use:*\n` +
-      `• Use buttons below for easy access\n` +
-      `• Or send city name directly in chat\n` +
-      `• Save your city for quick access\n\n` +
-      `*Status:* ${cityStatus}`;
+    const helpMessage = `${t('help', lang)} ${cityStatus}`;
     
     return ctx.replyWithMarkdown(helpMessage);
   }
   
-  const quickPhrases = ['times', 'prayer times', 'salah', 'namaz', 'now', 'today'];
+  // Handle quick phrases (both languages)
+  const quickPhrases = ['times', 'prayer times', 'salah', 'namaz', 'now', 'today', 
+                       'ጊዜዎች', 'የሶላት ጊዜዎች', 'ሶላት', 'አሁን', 'ዛሬ'];
   if (quickPhrases.includes(text.toLowerCase()) && savedCity) {
     try {
       await ctx.sendChatAction('typing');
       const prayerData = await fetchPrayerTimes(savedCity);
-      const formattedMessage = formatPrayerTimes(prayerData);
+      const formattedMessage = formatPrayerTimes(prayerData, lang);
       await ctx.replyWithMarkdown(formattedMessage);
       return;
     } catch (error) {
@@ -339,15 +334,15 @@ bot.on('text', async (ctx) => {
   
   if (text.length < 2) {
     const helpText = savedCity 
-      ? `Send city name or type "times" for ${savedCity}.`
-      : 'Send city name to get prayer times. Use /help for info.';
+      ? `${t('sendCityName', lang)} ${savedCity}.`
+      : t('sendCityForTimes', lang);
     return ctx.reply(helpText);
   }
   
   if (text.includes(' ') && text.split(' ').length > 3) {
     const helpText = savedCity
-      ? `Send just city name. Example: "Addis Ababa" or "times" for ${savedCity}.`
-      : 'Send just city name. Example: "Addis Ababa".';
+      ? `${t('sendJustCityName', lang)} ${savedCity}.`
+      : t('sendJustCity', lang);
     return ctx.reply(helpText);
   }
   
@@ -355,11 +350,16 @@ bot.on('text', async (ctx) => {
     await ctx.sendChatAction('typing');
     
     const prayerData = await fetchPrayerTimes(text);
-    const formattedMessage = formatPrayerTimes(prayerData);
+    
+    if (!prayerData || !prayerData.items || !prayerData.items[0]) {
+      return ctx.reply(t('unableToFind', lang));
+    }
+    
+    const formattedMessage = formatPrayerTimes(prayerData, lang);
     
     await ctx.replyWithMarkdown(formattedMessage);
   } catch (error) {
-    await handleError(ctx, error);
+    await ctx.reply(t('unableToFind', lang));
   }
 });
 
