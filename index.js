@@ -1,8 +1,16 @@
 const { Telegraf, session, Markup } = require('telegraf');
+const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
+
+// Fallback to session storage if Supabase is not available
 bot.use(session({
   defaultSession: () => ({
     savedCity: null,
@@ -91,6 +99,82 @@ function t(key, language = 'en') {
   return translations[language][key] || translations.en[key] || key;
 }
 
+// Database helper functions
+async function getUserData(userId) {
+  try {
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+      console.log('Supabase not configured, using session fallback');
+      return null;
+    }
+    
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+    
+    if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+      console.error('Error getting user data from Supabase:', error);
+      return null;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Error getting user data from Supabase:', error);
+    return null;
+  }
+}
+
+async function saveUserData(userId, data) {
+  try {
+    if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+      console.log('Supabase not configured, using session fallback');
+      return false;
+    }
+    
+    const { error } = await supabase
+      .from('users')
+      .upsert({
+        user_id: userId,
+        saved_city: data.savedCity,
+        language: data.language,
+        updated_at: new Date().toISOString()
+      });
+    
+    if (error) {
+      console.error('Error saving user data to Supabase:', error);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error saving user data to Supabase:', error);
+    return false;
+  }
+}
+
+async function getUserCity(userId) {
+  const userData = await getUserData(userId);
+  return userData ? userData.saved_city : null;
+}
+
+async function saveUserCity(userId, city) {
+  const userData = await getUserData(userId) || { savedCity: null, language: 'en' };
+  userData.savedCity = city;
+  return await saveUserData(userId, userData);
+}
+
+async function getUserLanguage(userId) {
+  const userData = await getUserData(userId);
+  return userData ? userData.language : 'en';
+}
+
+async function saveUserLanguage(userId, language) {
+  const userData = await getUserData(userId) || { savedCity: null, language: 'en' };
+  userData.language = language;
+  return await saveUserData(userId, userData);
+}
+
 async function fetchPrayerTimes(city) {
   try {
     const url = `${API_BASE_URL}/${encodeURIComponent(city)}.json`;
@@ -165,40 +249,88 @@ async function handleError(ctx, error) {
   await ctx.reply(errorMessage);
 }
 
-bot.start((ctx) => {
-  const savedCity = ctx.session.savedCity;
-  const lang = ctx.session.language;
+bot.start(async (ctx) => {
+  const userId = ctx.from.id;
   
-  const welcomeMessage = `${t('welcome', lang)} ${savedCity ? `${t('yourSavedCity', lang)}: *${savedCity}*` : t('noCitySaved', lang)}`;
+  // Try to get data from database first, fallback to session
+  let savedCity = await getUserCity(userId);
+  let language = await getUserLanguage(userId);
+  
+  // Fallback to session if database is not available
+  if (savedCity === null) {
+    savedCity = ctx.session.savedCity;
+  }
+  if (language === 'en' && !ctx.session.language) {
+    language = ctx.session.language || 'en';
+  }
+  
+  const welcomeMessage = `${t('welcome', language)} ${savedCity ? `${t('yourSavedCity', language)}: *${savedCity}*` : t('noCitySaved', language)}`;
 
   const keyboard = savedCity 
     ? Markup.keyboard([
-        [`${t('btnGetTimes', lang)} ${savedCity}`],
-        [t('btnMyCity', lang), t('btnChangeCity', lang)],
-        [t('btnHelp', lang), t('btnLanguage', lang)]
+        [`${t('btnGetTimes', language)} ${savedCity}`],
+        [t('btnMyCity', language), t('btnChangeCity', language)],
+        [t('btnHelp', language), t('btnLanguage', language)]
       ]).resize()
     : Markup.keyboard([
-        [t('btnSetCity', lang)],
-        [t('btnHelp', lang), t('btnLanguage', lang)]
+        [t('btnSetCity', language)],
+        [t('btnHelp', language), t('btnLanguage', language)]
       ]).resize();
   
   ctx.replyWithMarkdown(welcomeMessage, keyboard);
 });
 
+bot.help(async (ctx) => {
+  const userId = ctx.from.id;
+  
+  // Try to get data from database first, fallback to session
+  let savedCity = await getUserCity(userId);
+  let language = await getUserLanguage(userId);
+  
+  // Fallback to session if database is not available
+  if (savedCity === null) {
+    savedCity = ctx.session.savedCity;
+  }
+  if (language === 'en' && !ctx.session.language) {
+    language = ctx.session.language || 'en';
+  }
+  
+  const cityStatus = savedCity ? `${t('yourSavedCity', language)}: *${savedCity}*` : t('noCitySaved', language);
+  const helpMessage = `${t('help', language)} ${cityStatus}`;
+  
+  ctx.replyWithMarkdown(helpMessage);
+});
+
 
 bot.on('text', async (ctx) => {
   const text = ctx.message.text.trim();
-  const savedCity = ctx.session.savedCity;
-  const waitingForCity = ctx.session.waitingForCity;
-  const lang = ctx.session.language;
+  const userId = ctx.from.id;
   
   if (text.startsWith('/')) {
     return;
   }
   
+  // Try to get data from database first, fallback to session
+  let savedCity = await getUserCity(userId);
+  let language = await getUserLanguage(userId);
+  let waitingForCity = ctx.session.waitingForCity;
+  
+  // Fallback to session if database is not available
+  if (savedCity === null) {
+    savedCity = ctx.session.savedCity;
+  }
+  if (language === 'en' && !ctx.session.language) {
+    language = ctx.session.language || 'en';
+  }
+  
   // Handle language switching
   if (text === '🌐 Language' || text === '🌐 ቋንቋ') {
-    const newLang = lang === 'en' ? 'am' : 'en';
+    const newLang = language === 'en' ? 'am' : 'en';
+    
+    // Save to database
+    await saveUserLanguage(userId, newLang);
+    
+    // Also update session as fallback
     ctx.session.language = newLang;
     
     const message = newLang === 'am' 
@@ -222,7 +354,7 @@ bot.on('text', async (ctx) => {
   
   if (waitingForCity) {
     if (text.length < 2) {
-      return ctx.reply(t('sendValidCity', lang));
+      return ctx.reply(t('sendValidCity', language));
     }
     
     try {
@@ -232,24 +364,28 @@ bot.on('text', async (ctx) => {
       
       if (!prayerData || !prayerData.items || !prayerData.items[0]) {
         ctx.session.waitingForCity = false;
-        return ctx.reply(t('unableToFind', lang));
+        return ctx.reply(t('unableToFind', language));
       }
       
+      // Save to database
+      await saveUserCity(userId, text);
+      
+      // Also update session as fallback
       ctx.session.savedCity = text;
       ctx.session.waitingForCity = false;
       
-      const confirmMessage = `✅ *${t('citySaved', lang)}*\n\n${t('yourDefaultCity', lang)}: *${text}*`;
+      const confirmMessage = `✅ *${t('citySaved', language)}*\n\n${t('yourDefaultCity', language)}: *${text}*`;
       
       const keyboard = Markup.keyboard([
-        [`${t('btnGetTimes', lang)} ${text}`],
-        [t('btnMyCity', lang), t('btnChangeCity', lang)],
-        [t('btnHelp', lang), t('btnLanguage', lang)]
+        [`${t('btnGetTimes', language)} ${text}`],
+        [t('btnMyCity', language), t('btnChangeCity', language)],
+        [t('btnHelp', language), t('btnLanguage', language)]
       ]).resize();
       
       await ctx.replyWithMarkdown(confirmMessage, keyboard);
       
-      const formattedMessage = formatPrayerTimes(prayerData, lang);
-      await ctx.replyWithMarkdown(`${t('currentPrayerTimes', lang)}:\n\n${formattedMessage}`);
+      const formattedMessage = formatPrayerTimes(prayerData, language);
+      await ctx.replyWithMarkdown(`${t('currentPrayerTimes', language)}:\n\n${formattedMessage}`);
       
     } catch (error) {
       ctx.session.waitingForCity = false;
@@ -264,7 +400,7 @@ bot.on('text', async (ctx) => {
     try {
       await ctx.sendChatAction('typing');
       const prayerData = await fetchPrayerTimes(city);
-      const formattedMessage = formatPrayerTimes(prayerData, lang);
+      const formattedMessage = formatPrayerTimes(prayerData, language);
       await ctx.replyWithMarkdown(formattedMessage);
       return;
     } catch (error) {
@@ -276,22 +412,22 @@ bot.on('text', async (ctx) => {
   // Handle My City button (both languages)
   if (text === '🏙️ My City' || text === '🏙️ የኔ ከተማ') {
     if (!savedCity) {
-      const message = `🏙️ *${t('noCitySpecified', lang)}*\n\n${t('useBelowToSave', lang)}`;
+      const message = `🏙️ *${t('noCitySpecified', language)}*\n\n${t('useBelowToSave', language)}`;
       
       const keyboard = Markup.keyboard([
-        [t('btnSetCity', lang)],
-        [t('btnHelp', lang), t('btnLanguage', lang)]
+        [t('btnSetCity', language)],
+        [t('btnHelp', language), t('btnLanguage', language)]
       ]).resize();
       
       return ctx.replyWithMarkdown(message, keyboard);
     }
     
-    const message = `🏙️ *${t('yourSavedCity', lang)}*\n\n${t('currentCity', lang)}: *${savedCity}*\n\n${t('tapGetTimes', lang)}\n${t('tapChangeCity', lang)}`;
+    const message = `🏙️ *${t('yourSavedCity', language)}*\n\n${t('currentCity', language)}: *${savedCity}*\n\n${t('tapGetTimes', language)}\n${t('tapChangeCity', language)}`;
     
     const keyboard = Markup.keyboard([
-      [`${t('btnGetTimes', lang)} ${savedCity}`],
-      [t('btnChangeCity', lang)],
-      [t('btnHelp', lang), t('btnLanguage', lang)]
+      [`${t('btnGetTimes', language)} ${savedCity}`],
+      [t('btnChangeCity', language)],
+      [t('btnHelp', language), t('btnLanguage', language)]
     ]).resize();
     
     return ctx.replyWithMarkdown(message, keyboard);
@@ -302,16 +438,16 @@ bot.on('text', async (ctx) => {
       text === '📍 ከተማዬን አዘጋጅ' || text === '📍 ከተማ ቀይር') {
     ctx.session.waitingForCity = true;
     
-    const message = t('setCity', lang);
+    const message = t('setCity', language);
     
     return ctx.replyWithMarkdown(message);
   }
   
   // Handle Help button (both languages)
   if (text === '❓ Help' || text === '❓ እገዛ') {
-    const cityStatus = savedCity ? `${t('yourSavedCity', lang)}: *${savedCity}*` : t('noCitySaved', lang);
+    const cityStatus = savedCity ? `${t('yourSavedCity', language)}: *${savedCity}*` : t('noCitySaved', language);
     
-    const helpMessage = `${t('help', lang)} ${cityStatus}`;
+    const helpMessage = `${t('help', language)} ${cityStatus}`;
     
     return ctx.replyWithMarkdown(helpMessage);
   }
@@ -323,7 +459,7 @@ bot.on('text', async (ctx) => {
     try {
       await ctx.sendChatAction('typing');
       const prayerData = await fetchPrayerTimes(savedCity);
-      const formattedMessage = formatPrayerTimes(prayerData, lang);
+      const formattedMessage = formatPrayerTimes(prayerData, language);
       await ctx.replyWithMarkdown(formattedMessage);
       return;
     } catch (error) {
@@ -334,15 +470,15 @@ bot.on('text', async (ctx) => {
   
   if (text.length < 2) {
     const helpText = savedCity 
-      ? `${t('sendCityName', lang)} ${savedCity}.`
-      : t('sendCityForTimes', lang);
+      ? `${t('sendCityName', language)} ${savedCity}.`
+      : t('sendCityForTimes', language);
     return ctx.reply(helpText);
   }
   
   if (text.includes(' ') && text.split(' ').length > 3) {
     const helpText = savedCity
-      ? `${t('sendJustCityName', lang)} ${savedCity}.`
-      : t('sendJustCity', lang);
+      ? `${t('sendJustCityName', language)} ${savedCity}.`
+      : t('sendJustCity', language);
     return ctx.reply(helpText);
   }
   
@@ -352,14 +488,14 @@ bot.on('text', async (ctx) => {
     const prayerData = await fetchPrayerTimes(text);
     
     if (!prayerData || !prayerData.items || !prayerData.items[0]) {
-      return ctx.reply(t('unableToFind', lang));
+      return ctx.reply(t('unableToFind', language));
     }
     
-    const formattedMessage = formatPrayerTimes(prayerData, lang);
+    const formattedMessage = formatPrayerTimes(prayerData, language);
     
     await ctx.replyWithMarkdown(formattedMessage);
   } catch (error) {
-    await ctx.reply(t('unableToFind', lang));
+    await ctx.reply(t('unableToFind', language));
   }
 });
 

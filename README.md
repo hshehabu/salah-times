@@ -1,16 +1,16 @@
 # Salah Times Telegram Bot
 
-A lean and efficient Telegram bot built with Node.js and Telegraf that provides daily prayer times for any city worldwide using the MuslimSalat API.
+A lean and efficient Telegram bot built with Node.js and Telegraf that provides daily prayer times for any city worldwide using the MuslimSalat API with persistent Supabase database storage.
 
 ## Features
 
 - 🕌 Get daily prayer times for any city
 - 🌍 Worldwide coverage
-- 🧭 Qibla direction included
-- 💾 **Persistent city settings** (saves your default city)
+- 💾 **Persistent city settings** with Supabase database
+- 🌐 **Bilingual support** (English & Amharic)
 - ⚡ Fast and lightweight
-- 🚫 No database required (uses Telegram's built-in session storage)
-- 💬 Simple and intuitive interface
+- 💬 Simple and intuitive interface with reply keyboards
 - 🚀 Quick access with saved cities
 - 🎯 **Command menu** - No more typing commands manually!
-- 🔘 **Inline buttons** - Tap to interact, no typing required
+- 🔘 **Reply keyboards** - Tap to interact, no typing required
+- 💿 **Database storage** - Settings persist across sessions
