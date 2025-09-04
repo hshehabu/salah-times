@@ -136,7 +136,7 @@ async function saveUserData(userId, data) {
       .from('users')
       .upsert({
         user_id: userId,
-        saved_city: data.savedCity,
+        saved_city: data.saved_city,
         language: data.language,
         updated_at: new Date().toISOString()
       });
@@ -159,8 +159,8 @@ async function getUserCity(userId) {
 }
 
 async function saveUserCity(userId, city) {
-  const userData = await getUserData(userId) || { savedCity: null, language: 'en' };
-  userData.savedCity = city;
+  const userData = await getUserData(userId) || { saved_city: null, language: 'en' };
+  userData.saved_city = city;
   return await saveUserData(userId, userData);
 }
 
@@ -170,7 +170,7 @@ async function getUserLanguage(userId) {
 }
 
 async function saveUserLanguage(userId, language) {
-  const userData = await getUserData(userId) || { savedCity: null, language: 'en' };
+  const userData = await getUserData(userId) || { saved_city: null, language: 'en' };
   userData.language = language;
   return await saveUserData(userId, userData);
 }
