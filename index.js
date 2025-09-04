@@ -139,6 +139,8 @@ async function saveUserData(userId, data) {
         saved_city: data.saved_city,
         language: data.language,
         updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'user_id'
       });
     
     if (error) {
