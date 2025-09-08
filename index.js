@@ -99,6 +99,43 @@ function t(key, language = 'en') {
   return translations[language][key] || translations.en[key] || key;
 }
 
+// Convert time to 12-hour AM/PM format (handles both 24-hour strings and ISO timestamps)
+function convertTo12Hour(timeInput) {
+  if (!timeInput || typeof timeInput !== 'string') return timeInput;
+  
+  try {
+    // If it's an ISO timestamp (contains 'T' or 'Z'), parse it as a date
+    if (timeInput.includes('T') || timeInput.includes('Z')) {
+      const date = new Date(timeInput);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleTimeString('en-US', { 
+          hour: 'numeric', 
+          minute: '2-digit', 
+          hour12: true 
+        });
+      }
+    }
+    
+    // Fallback: handle 24-hour format strings (HH:MM)
+    const [hours, minutes] = timeInput.split(':');
+    const hour = parseInt(hours, 10);
+    const minute = minutes || '00';
+    
+    if (hour === 0) {
+      return `12:${minute} AM`;
+    } else if (hour < 12) {
+      return `${hour}:${minute} AM`;
+    } else if (hour === 12) {
+      return `12:${minute} PM`;
+    } else {
+      return `${hour - 12}:${minute} PM`;
+    }
+  } catch (error) {
+    console.log('Time conversion error:', error);
+    return timeInput; // Return original if conversion fails
+  }
+}
+
 // Database helper functions
 async function getUserData(userId) {
   try {
@@ -179,8 +216,8 @@ async function saveUserLanguage(userId, language) {
 
 async function fetchPrayerTimes(city) {
   try {
-    // Use timingsByAddress endpoint which is more flexible and doesn't require country
-    const url = `${API_BASE_URL}/timingsByAddress?address=${encodeURIComponent(city)}&method=3`;
+    // Use timingsByAddress endpoint with iso8601 parameter for better time formatting
+    const url = `${API_BASE_URL}/timingsByAddress?address=${encodeURIComponent(city)}&method=3&iso8601=true`;
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -233,11 +270,11 @@ function formatPrayerTimes(data, language = 'en') {
   const date = 'Today';
 
   return `🕌 *${t('prayerTimesFor', language)} ${location}*\n\n📅 ${date}\n\n` +
-         `🌅 *${t('fajr', language)}:* ${timings.Fajr}\n\n` +
-         `☀️ *${t('dhuhr', language)}:* ${timings.Dhuhr}\n\n` +
-         `🌤️ *${t('asr', language)}:* ${timings.Asr}\n\n` +
-         `🌅 *${t('maghrib', language)}:* ${timings.Maghrib}\n\n` +
-         `🌙 *${t('isha', language)}:* ${timings.Isha}`;
+         `🌅 *${t('fajr', language)}:* ${convertTo12Hour(timings.Fajr)}\n\n` +
+         `☀️ *${t('dhuhr', language)}:* ${convertTo12Hour(timings.Dhuhr)}\n\n` +
+         `🌤️ *${t('asr', language)}:* ${convertTo12Hour(timings.Asr)}\n\n` +
+         `🌅 *${t('maghrib', language)}:* ${convertTo12Hour(timings.Maghrib)}\n\n` +
+         `🌙 *${t('isha', language)}:* ${convertTo12Hour(timings.Isha)}`;
 }
 
 async function handleError(ctx, error) {
