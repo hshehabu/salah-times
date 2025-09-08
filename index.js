@@ -19,7 +19,7 @@ bot.use(session({
   })
 }));
 
-const API_BASE_URL = 'https://muslimsalat.com';
+const API_BASE_URL = 'http://api.aladhan.com/v1';
 
 // Translation object
 const translations = {
@@ -179,7 +179,8 @@ async function saveUserLanguage(userId, language) {
 
 async function fetchPrayerTimes(city) {
   try {
-    const url = `${API_BASE_URL}/${encodeURIComponent(city)}.json`;
+    // Use AlAdhan.com API with timingsByAddress endpoint
+    const url = `${API_BASE_URL}/timingsByAddress?address=${encodeURIComponent(city)}&method=3`;
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -188,6 +189,7 @@ async function fetchPrayerTimes(city) {
     
     const data = await response.json();
     
+    // Add original city for fallback location display
     data.originalCity = city;
     
     return data;
@@ -198,41 +200,48 @@ async function fetchPrayerTimes(city) {
 }
 
 function formatPrayerTimes(data, language = 'en') {
-  if (!data || !data.items || !data.items[0]) {
+  // Handle AlAdhan.com API response format
+  if (!data || !data.data || !data.data.timings) {
     return `❌ ${t('unableToFind', language)}`;
   }
 
-  const today = data.items[0];
+  const timings = data.data.timings;
+  const dateInfo = data.data.date;
   
-  let location = data.title || data.city || data.location || data.address || 
-                 today.city || today.location || today.address;
+  // Extract location information
+  let location = data.originalCity || 'Your Location';
   
-  if (!location && data.results && data.results.location) {
-    location = data.results.location;
+  // Try to get location from meta data if available
+  if (data.data.meta && data.data.meta.timezone) {
+    // Use timezone as location hint if available
+    const timezone = data.data.meta.timezone;
+    if (timezone.includes('/')) {
+      const parts = timezone.split('/');
+      if (parts.length > 1) {
+        location = parts[1].replace(/_/g, ' ');
+      }
+    }
   }
   
-  if (location && location !== 'Unknown Location') {
+  // Format location name
+  if (location && location !== 'Your Location') {
     location = location.replace(/\s+/g, ' ').trim();
     location = location.split(' ').map(word => 
       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     ).join(' ');
   }
   
-  if (!location) {
-    location = data.originalCity ? 
-      data.originalCity.split(' ').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-      ).join(' ') : 'Your Location';
-  }
-  
-  const date = today.date_for || today.date || 'Today';
+  // Format date
+  const date = dateInfo ? 
+    `${dateInfo.weekday.en}, ${dateInfo.day} ${dateInfo.month.en} ${dateInfo.year}` : 
+    'Today';
 
   return `🕌 *${t('prayerTimesFor', language)} ${location}*\n\n📅 ${date}\n\n` +
-         `🌅 *${t('fajr', language)}:* ${today.fajr}\n\n` +
-         `☀️ *${t('dhuhr', language)}:* ${today.dhuhr}\n\n` +
-         `🌤️ *${t('asr', language)}:* ${today.asr}\n\n` +
-         `🌅 *${t('maghrib', language)}:* ${today.maghrib}\n\n` +
-         `🌙 *${t('isha', language)}:* ${today.isha}`;
+         `🌅 *${t('fajr', language)}:* ${timings.Fajr}\n\n` +
+         `☀️ *${t('dhuhr', language)}:* ${timings.Dhuhr}\n\n` +
+         `🌤️ *${t('asr', language)}:* ${timings.Asr}\n\n` +
+         `🌅 *${t('maghrib', language)}:* ${timings.Maghrib}\n\n` +
+         `🌙 *${t('isha', language)}:* ${timings.Isha}`;
 }
 
 async function handleError(ctx, error) {
@@ -364,7 +373,7 @@ bot.on('text', async (ctx) => {
       
       const prayerData = await fetchPrayerTimes(text);
       
-      if (!prayerData || !prayerData.items || !prayerData.items[0]) {
+      if (!prayerData || !prayerData.data || !prayerData.data.timings) {
         ctx.session.waitingForCity = false;
         return ctx.reply(t('unableToFind', language));
       }
@@ -489,7 +498,7 @@ bot.on('text', async (ctx) => {
     
     const prayerData = await fetchPrayerTimes(text);
     
-    if (!prayerData || !prayerData.items || !prayerData.items[0]) {
+    if (!prayerData || !prayerData.data || !prayerData.data.timings) {
       return ctx.reply(t('unableToFind', language));
     }
     
