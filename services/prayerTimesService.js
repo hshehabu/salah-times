@@ -55,9 +55,33 @@ function formatPrayerTimes(data, language = 'en') {
     ).join(' ');
   }
   
-  const date = 'Today';
+  let dateDisplay = 'Today';
+  
+  if (data.data.date) {
+    const { hijri, gregorian } = data.data.date;
+    
+    if (hijri && gregorian) {
+      const gregorianWeekday = gregorian.weekday?.en || '';
+      const gregorianMonth = gregorian.month?.en || '';
+      const gregorianDay = gregorian.day || '';
+      const gregorianYear = gregorian.year || '';
+      
+      const hijriDay = hijri.day || '';
+      const hijriMonth = hijri.month?.en || '';
+      const hijriYear = hijri.year || '';
+      
+      if (gregorianWeekday && gregorianMonth && gregorianDay && gregorianYear && 
+          hijriDay && hijriMonth && hijriYear) {
+        dateDisplay = `${gregorianWeekday}, ${gregorianMonth} ${gregorianDay}, ${gregorianYear}\n(${hijriDay} ${hijriMonth} ${hijriYear} AH)`;
+      } else if (gregorian.readable) {
+        dateDisplay = gregorian.readable;
+      }
+    } else if (gregorian?.readable) {
+      dateDisplay = gregorian.readable;
+    }
+  }
 
-  return `🕌 *${t('prayerTimesFor', language)} ${location}*\n\n📅 ${date}\n\n` +
+  return `🕌 *${t('prayerTimesFor', language)} ${location}*\n\n📅 ${dateDisplay}\n\n` +
          `🌅 *${t('fajr', language)}:* ${convertTo12Hour(timings.Fajr, timezone)}\n\n` +
          `☀️ *${t('dhuhr', language)}:* ${convertTo12Hour(timings.Dhuhr, timezone)}\n\n` +
          `🌤️ *${t('asr', language)}:* ${convertTo12Hour(timings.Asr, timezone)}\n\n` +
