@@ -53,14 +53,24 @@ async function handleHelp(ctx) {
 
 async function handleLanguageSwitch(ctx, language) {
   const userId = ctx.from.id;
-  const newLang = language === 'en' ? 'am' : 'en';
+  
+  // Cycle through languages: en → am → ar → en
+  let newLang;
+  let message;
+  
+  if (language === 'en') {
+    newLang = 'am';
+    message = '🌐 ቋንቋ ወደ አማርኛ ተቀይሯል!';
+  } else if (language === 'am') {
+    newLang = 'ar';
+    message = '🌐 تم تغيير اللغة إلى العربية!';
+  } else {
+    newLang = 'en';
+    message = '🌐 Language changed to English!';
+  }
   
   await saveUserLanguage(userId, newLang);
   ctx.session.language = newLang;
-  
-  const message = newLang === 'am' 
-    ? '🌐 ቋንቋ ወደ አማርኛ ተቀይሯል!'
-    : '🌐 Language changed to English!';
   
   const savedCity = await getUserCity(userId) || ctx.session.savedCity;
   
