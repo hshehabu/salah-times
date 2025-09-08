@@ -179,10 +179,8 @@ async function saveUserLanguage(userId, language) {
 
 async function fetchPrayerTimes(city) {
   try {
-    const today = new Date();
-    const dateString = today.toISOString().split('T')[0];
-    
-    const url = `${API_BASE_URL}/timingsByCity/${dateString}?city=${encodeURIComponent(city)}&method=3`;
+    // Use timingsByAddress endpoint which is more flexible and doesn't require country
+    const url = `${API_BASE_URL}/timingsByAddress?address=${encodeURIComponent(city)}&method=3`;
     const response = await fetch(url);
     
     if (!response.ok) {
