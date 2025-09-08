@@ -99,8 +99,8 @@ function t(key, language = 'en') {
   return translations[language][key] || translations.en[key] || key;
 }
 
-// Convert time to 12-hour AM/PM format (handles both 24-hour strings and ISO timestamps)
-function convertTo12Hour(timeInput) {
+// Convert time to 12-hour AM/PM format with timezone awareness
+function convertTo12Hour(timeInput, timezone = null) {
   if (!timeInput || typeof timeInput !== 'string') return timeInput;
   
   try {
@@ -108,15 +108,19 @@ function convertTo12Hour(timeInput) {
     if (timeInput.includes('T') || timeInput.includes('Z')) {
       const date = new Date(timeInput);
       if (!isNaN(date.getTime())) {
-        return date.toLocaleTimeString('en-US', { 
+        // Use provided timezone or fallback to user's timezone
+        const options = { 
           hour: 'numeric', 
           minute: '2-digit', 
-          hour12: true 
-        });
+          hour12: true,
+          timeZone: timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
+        };
+        return date.toLocaleTimeString('en-US', options);
       }
     }
     
     // Fallback: handle 24-hour format strings (HH:MM)
+    // For 24-hour format, we can't easily convert timezone, so return as-is with manual conversion
     const [hours, minutes] = timeInput.split(':');
     const hour = parseInt(hours, 10);
     const minute = minutes || '00';
@@ -244,15 +248,21 @@ function formatPrayerTimes(data, language = 'en') {
 
   const timings = data.data.timings;
   
+  // Extract timezone from API response
+  let timezone = null;
+  if (data.data.meta && data.data.meta.timezone) {
+    timezone = data.data.meta.timezone;
+  }
+  
   // Extract location information
   let location = data.originalCity || 'Your Location';
   
   // Try to get location from meta data if available
   if (data.data.meta && data.data.meta.timezone) {
     // Use timezone as location hint if available
-    const timezone = data.data.meta.timezone;
-    if (timezone.includes('/')) {
-      const parts = timezone.split('/');
+    const timezoneStr = data.data.meta.timezone;
+    if (timezoneStr.includes('/')) {
+      const parts = timezoneStr.split('/');
       if (parts.length > 1) {
         location = parts[1].replace(/_/g, ' ');
       }
@@ -270,11 +280,11 @@ function formatPrayerTimes(data, language = 'en') {
   const date = 'Today';
 
   return `🕌 *${t('prayerTimesFor', language)} ${location}*\n\n📅 ${date}\n\n` +
-         `🌅 *${t('fajr', language)}:* ${convertTo12Hour(timings.Fajr)}\n\n` +
-         `☀️ *${t('dhuhr', language)}:* ${convertTo12Hour(timings.Dhuhr)}\n\n` +
-         `🌤️ *${t('asr', language)}:* ${convertTo12Hour(timings.Asr)}\n\n` +
-         `🌅 *${t('maghrib', language)}:* ${convertTo12Hour(timings.Maghrib)}\n\n` +
-         `🌙 *${t('isha', language)}:* ${convertTo12Hour(timings.Isha)}`;
+         `🌅 *${t('fajr', language)}:* ${convertTo12Hour(timings.Fajr, timezone)}\n\n` +
+         `☀️ *${t('dhuhr', language)}:* ${convertTo12Hour(timings.Dhuhr, timezone)}\n\n` +
+         `🌤️ *${t('asr', language)}:* ${convertTo12Hour(timings.Asr, timezone)}\n\n` +
+         `🌅 *${t('maghrib', language)}:* ${convertTo12Hour(timings.Maghrib, timezone)}\n\n` +
+         `🌙 *${t('isha', language)}:* ${convertTo12Hour(timings.Isha, timezone)}`;
 }
 
 async function handleError(ctx, error) {
