@@ -7,7 +7,7 @@ A lean and efficient Telegram bot built with Node.js and Telegraf that provides 
 - 🕌 Get daily prayer times for any city
 - 🌍 Worldwide coverage
 - 💾 **Persistent city settings** with Supabase database
-- 🌐 **Bilingual support** (English & Amharic)
+- 🌐 **Multi-language support** (English, Amharic, Arabic etc..)
 - ⚡ Fast and lightweight
 - 💬 Simple and intuitive interface with reply keyboards
 - 🚀 Quick access with saved cities
