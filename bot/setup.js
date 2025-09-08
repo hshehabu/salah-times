@@ -2,6 +2,7 @@ const { Telegraf, session } = require('telegraf');
 const config = require('../config');
 const { handleStart, handleHelp } = require('../handlers/commandHandlers');
 const { handleTextMessage } = require('../handlers/textHandler');
+const { handleCallbackQuery } = require('../handlers/callbackHandler');
 
 function createBot() {
   const bot = new Telegraf(config.bot.token);
@@ -15,6 +16,9 @@ function createBot() {
   
   // Text message handler
   bot.on('text', handleTextMessage);
+  
+  // Callback query handler (for inline keyboards)
+  bot.on('callback_query', handleCallbackQuery);
   
   // Error handler
   bot.catch((err, ctx) => {

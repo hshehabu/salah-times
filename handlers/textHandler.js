@@ -1,7 +1,8 @@
 const { getUserCity, getUserLanguage } = require('../database/supabase');
 const { t } = require('../translations');
 const {
-  handleLanguageSwitch,
+  handleLanguageSelection,
+  handleLanguageChange,
   handleCityInput,
   handleGetTimes,
   handleMyCity,
@@ -28,9 +29,9 @@ async function handleTextMessage(ctx) {
     language = ctx.session.language || 'en';
   }
   
-  // Handle language switching
+  // Handle language selection
   if (text === '🌐 Language' || text === '🌐 ቋንቋ' || text === '🌐 اللغة') {
-    return await handleLanguageSwitch(ctx, language);
+    return await handleLanguageSelection(ctx, language);
   }
   
   if (waitingForCity) {

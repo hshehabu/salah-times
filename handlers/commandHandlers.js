@@ -2,6 +2,7 @@ const { Markup } = require('telegraf');
 const { t } = require('../translations');
 const { getUserCity, getUserLanguage, saveUserCity, saveUserLanguage } = require('../database/supabase');
 const { fetchPrayerTimes, formatPrayerTimes, handleError } = require('../services/prayerTimesService');
+const { createLanguageKeyboard, getLanguageInfo } = require('../utils/languageUtils');
 
 async function handleStart(ctx) {
   const userId = ctx.from.id;
@@ -51,38 +52,35 @@ async function handleHelp(ctx) {
   ctx.replyWithMarkdown(helpMessage);
 }
 
-async function handleLanguageSwitch(ctx, language) {
+async function handleLanguageSelection(ctx, language) {
+  const currentLang = getLanguageInfo(language);
+  const message = `🌐 *${t('btnLanguage', language)}*\n\n${t('selectLanguage', language) || 'Select your preferred language:'}\n\n${t('currentLanguage', language) || 'Current language'}: ${currentLang.flag} ${currentLang.nativeName}`;
+  
+  const keyboard = createLanguageKeyboard();
+  
+  return ctx.replyWithMarkdown(message, keyboard);
+}
+
+async function handleLanguageChange(ctx, newLanguageCode, currentLanguage) {
   const userId = ctx.from.id;
+  const newLangInfo = getLanguageInfo(newLanguageCode);
   
-  // Cycle through languages: en → am → ar → en
-  let newLang;
-  let message;
+  await saveUserLanguage(userId, newLanguageCode);
+  ctx.session.language = newLanguageCode;
   
-  if (language === 'en') {
-    newLang = 'am';
-    message = '🌐 ቋንቋ ወደ አማርኛ ተቀይሯል!';
-  } else if (language === 'am') {
-    newLang = 'ar';
-    message = '🌐 تم تغيير اللغة إلى العربية!';
-  } else {
-    newLang = 'en';
-    message = '🌐 Language changed to English!';
-  }
-  
-  await saveUserLanguage(userId, newLang);
-  ctx.session.language = newLang;
+  const message = `✅ ${t('languageChanged', newLanguageCode) || 'Language changed to'}: ${newLangInfo.flag} ${newLangInfo.nativeName}`;
   
   const savedCity = await getUserCity(userId) || ctx.session.savedCity;
   
   const keyboard = savedCity 
     ? Markup.keyboard([
-        [`${t('btnGetTimes', newLang)} ${savedCity}`],
-        [t('btnMyCity', newLang), t('btnChangeCity', newLang)],
-        [t('btnHelp', newLang), t('btnLanguage', newLang)]
+        [`${t('btnGetTimes', newLanguageCode)} ${savedCity}`],
+        [t('btnMyCity', newLanguageCode), t('btnChangeCity', newLanguageCode)],
+        [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode)]
       ]).resize()
     : Markup.keyboard([
-        [t('btnSetCity', newLang)],
-        [t('btnHelp', newLang), t('btnLanguage', newLang)]
+        [t('btnSetCity', newLanguageCode)],
+        [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode)]
       ]).resize();
   
   return ctx.replyWithMarkdown(message, keyboard);
@@ -184,7 +182,8 @@ async function handleQuickPhrases(ctx, savedCity, language) {
 module.exports = {
   handleStart,
   handleHelp,
-  handleLanguageSwitch,
+  handleLanguageSelection,
+  handleLanguageChange,
   handleCityInput,
   handleGetTimes,
   handleMyCity,

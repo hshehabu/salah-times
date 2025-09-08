@@ -32,7 +32,11 @@ const translations = {
     btnSetCity: '📍 Set My City',
     btnChangeCity: '📍 Change City',
     btnHelp: '❓ Help',
-    btnLanguage: '🌐 Language'
+    btnLanguage: '🌐 Language',
+    
+    selectLanguage: 'Select your preferred language:',
+    currentLanguage: 'Current language',
+    languageChanged: 'Language changed to'
   },
   am: {
     welcome: '🕌 *እንኳን ደህና መጣህ*\n\nለማንኛውም ከተማ የሶላት ጊዜዎችን ያግኙ።\n\n*ፈጣን መጀመሪያ:*\n• ከታች ያሉትን አዝራሮች ይጠቀሙ\n• ወይም የከተማ ስም በቀጥታ ይላኩ\n• ለፈጣን መዳረሻ ከተማን ያስቀምጡ\n\n*ሁኔታ:*',
@@ -67,7 +71,11 @@ const translations = {
     btnSetCity: '📍 ከተማዬን አዘጋጅ',
     btnChangeCity: '📍 ከተማ ቀይር',
     btnHelp: '❓ እገዛ',
-    btnLanguage: '🌐 ቋንቋ'
+    btnLanguage: '🌐 ቋንቋ',
+    
+    selectLanguage: 'የሚመርጡትን ቋንቋ ይምረጡ:',
+    currentLanguage: 'የአሁኑ ቋንቋ',
+    languageChanged: 'ቋንቋ ተቀይሯል ወደ'
   },
   ar: {
     welcome: '🕌 *أهلاً وسهلاً*\n\nاحصل على أوقات الصلاة لأي مدينة.\n\n*بداية سريعة:*\n• استخدم الأزرار أدناه\n• أو أرسل اسم المدينة مباشرة\n• احفظ المدينة للوصول السريع\n\n*الحالة:*',
@@ -102,7 +110,11 @@ const translations = {
     btnSetCity: '📍 حدد مدينتي',
     btnChangeCity: '📍 تغيير المدينة',
     btnHelp: '❓ مساعدة',
-    btnLanguage: '🌐 اللغة'
+    btnLanguage: '🌐 اللغة',
+    
+    selectLanguage: 'اختر لغتك المفضلة:',
+    currentLanguage: 'اللغة الحالية',
+    languageChanged: 'تم تغيير اللغة إلى'
   }
 };
 
