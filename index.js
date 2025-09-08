@@ -206,7 +206,6 @@ function formatPrayerTimes(data, language = 'en') {
   }
 
   const timings = data.data.timings;
-  const dateInfo = data.data.date;
   
   // Extract location information
   let location = data.originalCity || 'Your Location';
@@ -231,10 +230,7 @@ function formatPrayerTimes(data, language = 'en') {
     ).join(' ');
   }
   
-  // Format date
-  const date = dateInfo ? 
-    `${dateInfo.weekday.en}, ${dateInfo.day} ${dateInfo.month.en} ${dateInfo.year}` : 
-    'Today';
+  const date = 'Today';
 
   return `🕌 *${t('prayerTimesFor', language)} ${location}*\n\n📅 ${date}\n\n` +
          `🌅 *${t('fajr', language)}:* ${timings.Fajr}\n\n` +
