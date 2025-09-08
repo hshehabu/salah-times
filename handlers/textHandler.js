@@ -2,7 +2,6 @@ const { getUserCity, getUserLanguage } = require('../database/supabase');
 const { t } = require('../translations');
 const {
   handleLanguageSelection,
-  handleLanguageChange,
   handleCityInput,
   handleGetTimes,
   handleMyCity,
@@ -63,7 +62,6 @@ async function handleTextMessage(ctx) {
     return ctx.replyWithMarkdown(helpMessage);
   }
   
-  // Handle quick phrases (all languages)
   const quickPhrases = ['times', 'prayer times', 'salah', 'namaz', 'now', 'today', 
                        'ጊዜዎች', 'የሶላት ጊዜዎች', 'ሶላት', 'አሁን', 'ዛሬ',
                        'أوقات', 'أوقات الصلاة', 'صلاة', 'الآن', 'اليوم'];
@@ -85,7 +83,6 @@ async function handleTextMessage(ctx) {
     return ctx.reply(helpText);
   }
   
-  // Handle direct city name input
   return await handleGetTimes(ctx, text, language);
 }
 
