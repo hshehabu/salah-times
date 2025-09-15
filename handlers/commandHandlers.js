@@ -196,7 +196,7 @@ async function handlePrayerTimesMenu(ctx, language) {
   
   const keyboard = savedCity 
     ? Markup.keyboard([
-        [`${t('btnGetTimes', language)} ${savedCity}`, [t('btnReminder', language)]],
+        [`${t('btnGetTimes', language)} ${savedCity}`, t('btnReminder', language)],
         [t('btnMyCity', language), t('btnChangeCity', language)],
         [t('btnBackToMain', language)]
       ]).resize()
