@@ -10,6 +10,7 @@ const {
   handleQuickPhrases,
   handleToolsMenu,
   handleToHijri,
+  handleIslamicMonths,
 } = require('./commandHandlers');
 
 async function handleTextMessage(ctx) {
@@ -73,6 +74,11 @@ async function handleTextMessage(ctx) {
   // Handle To Hijri button (all languages)
   if (text === '📅 To Hijri' || text === '📅 ወደ ሂጅሪ' || text === '📅 إلى الهجري') {
     return await handleToHijri(ctx, language);
+  }
+  
+  // Handle Islamic Months button (all languages)
+  if (text === '📅 Islamic Months' || text === '📅 የኢስላም ወራት' || text === '📅 الأشهر الهجرية') {
+    return await handleIslamicMonths(ctx, language);
   }
   
   // Handle Back to Main button (all languages)

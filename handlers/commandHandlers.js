@@ -197,6 +197,7 @@ async function handleToolsMenu(ctx, language) {
   
   const keyboard = Markup.keyboard([
     [t('btnToHijri', language)],
+    [t('btnIslamicMonths', language)],
     [t('btnBackToMain', language)]
   ]).resize();
   
@@ -231,6 +232,35 @@ async function handleDateSelection(ctx, selectedDate, language) {
   }
 }
 
+async function handleIslamicMonths(ctx, language) {
+  try {
+    await ctx.sendChatAction('typing');
+    
+    // Load Islamic months data
+    const islamicMonthsData = require('../data/islamicMonths.json');
+    const months = islamicMonthsData.data;
+    
+    // Build the months list
+    let monthsList = '';
+    for (let i = 1; i <= 12; i++) {
+      const month = months[i.toString()];
+      if (month) {
+        monthsList += `${month.number}. ${month.en} (${month.ar})\n`;
+      }
+    }
+    
+    const message = `${t('islamicMonthsTitle', language)}${t('islamicMonthsList', language)}\n\n${monthsList}`;
+    
+    const keyboard = Markup.keyboard([
+      [t('btnBackToMain', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
+  } catch (error) {
+    await handleError(ctx, error);
+  }
+}
+
 module.exports = {
   handleStart,
   handleHelp,
@@ -244,6 +274,7 @@ module.exports = {
   handleToolsMenu,
   handleToHijri,
   handleDateSelection,
+  handleIslamicMonths,
   setGlobalCalendar,
   getGlobalCalendar,
 };

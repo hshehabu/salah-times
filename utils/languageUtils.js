@@ -1,6 +1,5 @@
 const { Markup } = require('telegraf');
 
-// Available languages configuration
 const availableLanguages = {
   en: {
     code: 'en',
@@ -22,7 +21,6 @@ const availableLanguages = {
   }
 };
 
-// Create language selection inline keyboard
 function createLanguageKeyboard() {
   const buttons = Object.values(availableLanguages).map(lang => 
     Markup.button.callback(
@@ -31,7 +29,6 @@ function createLanguageKeyboard() {
     )
   );
 
-  // Arrange buttons in rows of 2
   const keyboard = [];
   for (let i = 0; i < buttons.length; i += 2) {
     keyboard.push(buttons.slice(i, i + 2));
@@ -40,17 +37,14 @@ function createLanguageKeyboard() {
   return Markup.inlineKeyboard(keyboard);
 }
 
-// Get language info by code
 function getLanguageInfo(code) {
   return availableLanguages[code] || availableLanguages.en;
 }
 
-// Get all available languages
 function getAvailableLanguages() {
   return availableLanguages;
 }
 
-// Check if language code is valid
 function isValidLanguage(code) {
   return code in availableLanguages;
 }

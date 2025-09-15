@@ -12,33 +12,25 @@ require('dayjs/locale/en');
 function createBot() {
   const bot = new Telegraf(config.bot.token);
   
-  // Set dayjs locale to English
   dayjs.locale('en');
   
-  // Create global calendar instance
   const calendar = new Calendar(bot, {
     date_format: 'YYYY-MM-DD',
     language: 'en',
     bot_api: 'telegraf'
   });
   
-  // Set the global calendar instance
   setGlobalCalendar(calendar);
   
-  // Use session middleware
   bot.use(session(config.session));
   
-  // Command handlers
   bot.start(handleStart);
   bot.help(handleHelp);
   
-  // Text message handler
   bot.on('text', handleTextMessage);
   
-  // Callback query handler (for inline keyboards)
   bot.on('callback_query', handleCallbackQuery);
   
-  // Error handler
   bot.catch((err, ctx) => {
     console.error('Unhandled bot error:', err);
     ctx.reply('❌ An unexpected error occurred. Please try again later.');
