@@ -1,11 +1,22 @@
 const { Telegraf, session } = require('telegraf');
 const config = require('../config');
-const { handleStart, handleHelp } = require('../handlers/commandHandlers');
+const { handleStart, handleHelp, setGlobalCalendar } = require('../handlers/commandHandlers');
 const { handleTextMessage } = require('../handlers/textHandler');
 const { handleCallbackQuery } = require('../handlers/callbackHandler');
+const Calendar = require('telegram-inline-calendar');
 
 function createBot() {
   const bot = new Telegraf(config.bot.token);
+  
+  // Create global calendar instance
+  const calendar = new Calendar(bot, {
+    date_format: 'YYYY-MM-DD',
+    language: 'en',
+    bot_api: 'telegraf'
+  });
+  
+  // Set the global calendar instance
+  setGlobalCalendar(calendar);
   
   // Use session middleware
   bot.use(session(config.session));

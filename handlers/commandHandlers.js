@@ -6,6 +6,17 @@ const { createLanguageKeyboard, getLanguageInfo } = require('../utils/languageUt
 const { convertGregorianToHijri, formatDateConversion } = require('../services/hijriConversionService');
 const Calendar = require('telegram-inline-calendar');
 
+// Global calendar instance - will be initialized in bot setup
+let globalCalendar = null;
+
+function setGlobalCalendar(calendar) {
+  globalCalendar = calendar;
+}
+
+function getGlobalCalendar() {
+  return globalCalendar;
+}
+
 async function handleStart(ctx) {
   const userId = ctx.from.id;
   
@@ -193,20 +204,14 @@ async function handleToolsMenu(ctx, language) {
 }
 
 async function handleToHijri(ctx, language) {
-  const message = t('selectDateToConvert', language);
+  if (!globalCalendar) {
+    return ctx.reply('❌ Calendar service is not available. Please try again later.');
+  }
   
-  // Create calendar instance
-  const calendar = new Calendar(ctx.telegram, {
-    date_format: 'YYYY-MM-DD',
-    language: 'en',
-    bot_api: 'telegraf'
-  });
-  
-  // Store calendar instance in session for callback handling
-  ctx.session.calendar = calendar;
+  // Set session state for date selection
   ctx.session.waitingForDate = true;
   
-  return calendar.startNavCalendar(ctx.message);
+  return globalCalendar.startNavCalendar(ctx.message);
 }
 
 async function handleDateSelection(ctx, selectedDate, language) {
@@ -218,12 +223,10 @@ async function handleDateSelection(ctx, selectedDate, language) {
     
     // Clear session state
     ctx.session.waitingForDate = false;
-    ctx.session.calendar = null;
     
     return ctx.replyWithMarkdown(formattedMessage);
   } catch (error) {
     ctx.session.waitingForDate = false;
-    ctx.session.calendar = null;
     await handleError(ctx, error);
   }
 }
@@ -241,4 +244,6 @@ module.exports = {
   handleToolsMenu,
   handleToHijri,
   handleDateSelection,
+  setGlobalCalendar,
+  getGlobalCalendar,
 };
