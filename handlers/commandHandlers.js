@@ -33,16 +33,10 @@ async function handleStart(ctx) {
   
   const welcomeMessage = `${t('welcome', language)} ${savedCity ? `${t('yourSavedCity', language)}: *${savedCity}*` : t('noCitySaved', language)}`;
 
-  const keyboard = savedCity 
-    ? Markup.keyboard([
-        [`${t('btnGetTimes', language)} ${savedCity}`],
-        [t('btnMyCity', language), t('btnChangeCity', language)],
-        [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
-      ]).resize()
-    : Markup.keyboard([
-        [t('btnSetCity', language)],
-        [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
-      ]).resize();
+  const keyboard = Markup.keyboard([
+    [t('btnPrayerTimes', language), t('btnOtherTools', language)],
+    [t('btnHelp', language), t('btnLanguage', language)]
+  ]).resize();
   
   ctx.replyWithMarkdown(welcomeMessage, keyboard);
 }
@@ -86,16 +80,10 @@ async function handleLanguageChange(ctx, newLanguageCode, currentLanguage) {
   
   const savedCity = await getUserCity(userId) || ctx.session.savedCity;
   
-  const keyboard = savedCity 
-    ? Markup.keyboard([
-        [`${t('btnGetTimes', newLanguageCode)} ${savedCity}`],
-        [t('btnMyCity', newLanguageCode), t('btnChangeCity', newLanguageCode)],
-        [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode), t('btnTools', newLanguageCode)]
-      ]).resize()
-    : Markup.keyboard([
-        [t('btnSetCity', newLanguageCode)],
-        [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode), t('btnTools', newLanguageCode)]
-      ]).resize();
+  const keyboard = Markup.keyboard([
+    [t('btnPrayerTimes', newLanguageCode), t('btnOtherTools', newLanguageCode)],
+    [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode)]
+  ]).resize();
   
   return ctx.replyWithMarkdown(message, keyboard);
 }
@@ -124,9 +112,8 @@ async function handleCityInput(ctx, text, language) {
     const confirmMessage = `✅ *${t('citySaved', language)}*\n\n${t('yourDefaultCity', language)}: *${text}*`;
     
     const keyboard = Markup.keyboard([
-      [`${t('btnGetTimes', language)} ${text}`],
-      [t('btnMyCity', language), t('btnChangeCity', language)],
-      [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
+      [t('btnPrayerTimes', language), t('btnOtherTools', language)],
+      [t('btnHelp', language), t('btnLanguage', language)]
     ]).resize();
     
     await ctx.replyWithMarkdown(confirmMessage, keyboard);
@@ -157,7 +144,7 @@ async function handleMyCity(ctx, savedCity, language) {
     
     const keyboard = Markup.keyboard([
       [t('btnSetCity', language)],
-      [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
+      [t('btnBackToMain', language)]
     ]).resize();
     
     return ctx.replyWithMarkdown(message, keyboard);
@@ -168,7 +155,7 @@ async function handleMyCity(ctx, savedCity, language) {
   const keyboard = Markup.keyboard([
     [`${t('btnGetTimes', language)} ${savedCity}`],
     [t('btnChangeCity', language)],
-    [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
+    [t('btnBackToMain', language)]
   ]).resize();
   
   return ctx.replyWithMarkdown(message, keyboard);
@@ -177,7 +164,12 @@ async function handleMyCity(ctx, savedCity, language) {
 async function handleSetCity(ctx, language) {
   ctx.session.waitingForCity = true;
   const message = t('setCity', language);
-  return ctx.replyWithMarkdown(message);
+  
+  const keyboard = Markup.keyboard([
+    [t('btnBackToMain', language)]
+  ]).resize();
+  
+  return ctx.replyWithMarkdown(message, keyboard);
 }
 
 async function handleQuickPhrases(ctx, savedCity, language) {
@@ -191,6 +183,38 @@ async function handleQuickPhrases(ctx, savedCity, language) {
   } catch (error) {
     await handleError(ctx, error);
   }
+}
+
+async function handlePrayerTimesMenu(ctx, language) {
+  const userId = ctx.from.id;
+  const savedCity = await getUserCity(userId) || ctx.session.savedCity;
+  
+  const message = t('prayerTimesMenu', language);
+  
+  const keyboard = savedCity 
+    ? Markup.keyboard([
+        [`${t('btnGetTimes', language)} ${savedCity}`],
+        [t('btnMyCity', language), t('btnChangeCity', language)],
+        [t('btnBackToMain', language)]
+      ]).resize()
+    : Markup.keyboard([
+        [t('btnSetCity', language)],
+        [t('btnBackToMain', language)]
+      ]).resize();
+  
+  return ctx.replyWithMarkdown(message, keyboard);
+}
+
+async function handleOtherToolsMenu(ctx, language) {
+  const message = t('otherToolsMenu', language);
+  
+  const keyboard = Markup.keyboard([
+    [t('btnToHijri', language), t('btnAgeCalculator', language)],
+    [t('btnIslamicMonths', language)],
+    [t('btnBackToMain', language)]
+  ]).resize();
+  
+  return ctx.replyWithMarkdown(message, keyboard);
 }
 
 async function handleToolsMenu(ctx, language) {
@@ -237,7 +261,7 @@ async function handleAgeCalculator(ctx, language) {
   const message = t('ageCalculatorPrompt', language);
   
   const keyboard = Markup.keyboard([
-    [t('btnBackToMain', language)]
+    [t('btnBackToTools', language)]
   ]).resize();
   
   return ctx.replyWithMarkdown(message, keyboard);
@@ -254,7 +278,7 @@ async function handleBirthDateInput(ctx, birthDateString, language) {
     
     const keyboard = Markup.keyboard([
       [t('btnAgeCalculator', language)],
-      [t('btnBackToMain', language)]
+      [t('btnBackToTools', language)]
     ]).resize();
     
     return ctx.replyWithMarkdown(formattedMessage, keyboard);
@@ -282,7 +306,7 @@ async function handleIslamicMonths(ctx, language) {
     const message = `${t('islamicMonthsTitle', language)}${t('islamicMonthsList', language)}\n\n${monthsList}`;
     
     const keyboard = Markup.keyboard([
-      [t('btnBackToMain', language)]
+      [t('btnBackToTools', language)]
     ]).resize();
     
     return ctx.replyWithMarkdown(message, keyboard);
@@ -301,6 +325,8 @@ module.exports = {
   handleMyCity,
   handleSetCity,
   handleQuickPhrases,
+  handlePrayerTimesMenu,
+  handleOtherToolsMenu,
   handleToolsMenu,
   handleToHijri,
   handleDateSelection,

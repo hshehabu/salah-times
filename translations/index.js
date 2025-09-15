@@ -34,14 +34,19 @@ const translations = {
     btnHelp: '❓ Help',
     btnLanguage: '🌐 Language',
     btnTools: '🔧 Tools',
+    btnPrayerTimes: '🕌 Prayer Times',
+    btnOtherTools: '🔧 Other Tools',
     btnToHijri: '🔁 To Hijri',
     btnBackToMain: '⬅️ Back to Main',
+    btnBackToTools: '⬅️ Back to Tools',
     
     selectLanguage: 'Select your preferred language:',
     currentLanguage: 'Current language',
     languageChanged: 'Language changed to',
     
     toolsMenu: '🔧 *Tools*\n\nSelect a tool to use:',
+    prayerTimesMenu: '🕌 *Prayer Times*\n\nSelect an option:',
+    otherToolsMenu: '🔧 *Other Tools*\n\nSelect a tool to use:',
     selectDateToConvert: '📅 *Date to Hijri Converter*\n\nPlease select a Gregorian date to convert to Hijri:',
     dateConverted: '📅 *Date Conversion*\n\n*Gregorian:* {gregorian}\n*Hijri:* {hijri}',
     conversionError: '❌ Error converting date. Please try again.',
@@ -55,12 +60,12 @@ const translations = {
     ageCalculationError: '❌ Error calculating age: {error}',
     ageCalculationResult: '🧾 *Age Calculation*\n\n' +
     '📅 *Birth Information:*\n' +
-    '   • Gregorian: {birthGregorian}\n' +
     '   • Hijri: {birthHijri}\n' +
+    '   • Gregorian: {birthGregorian}\n' +
     '   • Day of Week: {birthDayOfWeek}\n\n' +
     '⏳ *Current Age:*\n' +
-    '   • Gregorian: {gregorianAge}\n' +
-    '   • Hijri: {hijriAge}',
+    '   • Hijri: {hijriAge}\n' +
+    '   • Gregorian: {gregorianAge}',
     years: 'years',
     months: 'months', 
     days: 'days',
@@ -103,14 +108,19 @@ const translations = {
     btnHelp: '❓ እገዛ',
     btnLanguage: '🌐 ቋንቋ',
     btnTools: '🔧 መሳሪያዎች',
+    btnPrayerTimes: '🕌 የሶላት ጊዜዎች',
+    btnOtherTools: '🔧 ሌሎች መሳሪያዎች',
     btnToHijri: '🔁 ወደ ሂጅሪ',
     btnBackToMain: '⬅️ ወደ ዋናው ተመለስ',
+    btnBackToTools: '⬅️ ወደ መሳሪያዎች ተመለስ',
     
     selectLanguage: 'የሚመርጡትን ቋንቋ ይምረጡ:',
     currentLanguage: 'የአሁኑ ቋንቋ',
     languageChanged: 'ቋንቋ ተቀይሯል ወደ',
     
     toolsMenu: '🔧 *መሳሪያዎች*\n\nለመጠቀም መሳሪያ ይምረጡ:',
+    prayerTimesMenu: '🕌 *የሶላት ጊዜዎች*\n\nአማራጭ ይምረጡ:',
+    otherToolsMenu: '🔧 *ሌሎች መሳሪያዎች*\n\nለመጠቀም መሳሪያ ይምረጡ:',
     selectDateToConvert: '📅 *ወደ ሂጅሪ ቀን መቀየሪያ*\n\nወደ ሂጅሪ ለመቀየር ግሪጎሪያን ቀን ይምረጡ:',
     dateConverted: '📅 *ቀን መቀየሪያ*\n\n*ግሪጎሪያን:* {gregorian}\n*ሂጅሪ:* {hijri}',
     conversionError: '❌ ቀን በመቀየር ላይ ስህተት። እባክዎ እንደገና ይሞክሩ።',
@@ -124,12 +134,12 @@ const translations = {
     ageCalculationError: '❌ ዕድሜ በማስላት ላይ ስህተት: {error}',
     ageCalculationResult: '🧾 *የዕድሜ ስሌት*\n\n' +
     '📅 *የተወለዱበት መረጃ:*\n' +
-    '   • ግሪጎሪያን: {birthGregorian}\n' +
     '   • ሂጅሪ: {birthHijri}\n' +
+    '   • ግሪጎሪያን: {birthGregorian}\n' +
     '   • የሳምንት ቀን: {birthDayOfWeek}\n\n' +
     '⏳ *የአሁኑ ዕድሜ:*\n' +
-    '   • ግሪጎሪያን: {gregorianAge}\n' +
-    '   • ሂጅሪ: {hijriAge}',
+    '   • ሂጅሪ: {hijriAge}\n' +
+    '   • ግሪጎሪያን: {gregorianAge}',
 
     years: 'ዓመታት',
     months: 'ወራት',
@@ -173,14 +183,19 @@ const translations = {
     btnHelp: '❓ مساعدة',
     btnLanguage: '🌐 اللغة',
     btnTools: '🔧 أدوات',
+    btnPrayerTimes: '🕌 أوقات الصلاة',
+    btnOtherTools: '🔧 أدوات أخرى',
     btnToHijri: '🔁 إلى الهجري',
     btnBackToMain: '⬅️ العودة للرئيسية',
+    btnBackToTools: '⬅️ العودة للأدوات',
     
     selectLanguage: 'اختر لغتك المفضلة:',
     currentLanguage: 'اللغة الحالية',
     languageChanged: 'تم تغيير اللغة إلى',
     
     toolsMenu: '🔧 *الأدوات*\n\nاختر أداة للاستخدام:',
+    prayerTimesMenu: '🕌 *أوقات الصلاة*\n\nاختر خياراً:',
+    otherToolsMenu: '🔧 *أدوات أخرى*\n\nاختر أداة للاستخدام:',
     selectDateToConvert: '📅 *محول التاريخ إلى الهجري*\n\nيرجى اختيار تاريخ ميلادي لتحويله إلى هجري:',
     dateConverted: '📅 *تحويل التاريخ*\n\n*الميلادي:* {gregorian}\n*الهجري:* {hijri}',
     conversionError: '❌ خطأ في تحويل التاريخ. يرجى المحاولة مرة أخرى.',
@@ -194,12 +209,12 @@ const translations = {
     ageCalculationError: '❌ خطأ في حساب العمر: {error}',
     ageCalculationResult: '🧾 *حساب العمر*\n\n' +
     '📅 *تاريخ الميلاد:*\n' +
-    '   • ميلادي: {birthGregorian}\n' +
     '   • هجري: {birthHijri}\n' +
+    '   • ميلادي: {birthGregorian}\n' +
     '   • يوم الأسبوع: {birthDayOfWeek}\n\n' +
     '⏳ *العمر الحالي:*\n' +
-    '   • ميلادي: {gregorianAge}\n' +
-    '   • هجري: {hijriAge}',
+    '   • هجري: {hijriAge}\n' +
+    '   • ميلادي: {gregorianAge}',
 
     years: 'سنوات',
     months: 'أشهر',

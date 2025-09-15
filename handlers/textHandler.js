@@ -8,6 +8,8 @@ const {
   handleMyCity,
   handleSetCity,
   handleQuickPhrases,
+  handlePrayerTimesMenu,
+  handleOtherToolsMenu,
   handleToolsMenu,
   handleToHijri,
   handleAgeCalculator,
@@ -68,6 +70,14 @@ async function handleTextMessage(ctx) {
     return ctx.replyWithMarkdown(helpMessage);
   }
   
+  if (text === '🕌 Prayer Times' || text === '🕌 የሶላት ጊዜዎች' || text === '🕌 أوقات الصلاة') {
+    return await handlePrayerTimesMenu(ctx, language);
+  }
+  
+  if (text === '🔧 Other Tools' || text === '🔧 ሌሎች መሳሪያዎች' || text === '🔧 أدوات أخرى') {
+    return await handleOtherToolsMenu(ctx, language);
+  }
+  
   if (text === '🔧 Tools' || text === '🔧 መሳሪያዎች' || text === '🔧 أدوات') {
     return await handleToolsMenu(ctx, language);
   }
@@ -86,6 +96,10 @@ async function handleTextMessage(ctx) {
   
   if (text === '⬅️ Back to Main' || text === '⬅️ ወደ ዋናው ተመለስ' || text === '⬅️ العودة للرئيسية') {
     return await handleStart(ctx);
+  }
+  
+  if (text === '⬅️ Back to Tools' || text === '⬅️ ወደ መሳሪያዎች ተመለስ' || text === '⬅️ العودة للأدوات') {
+    return await handleOtherToolsMenu(ctx, language);
   }
   
   const quickPhrases = ['times', 'prayer times', 'salah', 'namaz', 'now', 'today', 
