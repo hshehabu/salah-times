@@ -320,12 +320,6 @@ async function handleFeedback(ctx, language) {
 
 async function handleFeedbackInput(ctx, feedbackText, language) {
   try {
-    const userId = ctx.from.id;
-    const username = ctx.from.username ? `@${ctx.from.username}` : 'No username';
-    const firstName = ctx.from.first_name || '';
-    const lastName = ctx.from.last_name || '';
-    const fullName = `${firstName} ${lastName}`.trim();
-    
     const { FEEDBACK_RECIPIENT } = require('../config');
     
     if (!FEEDBACK_RECIPIENT) {
@@ -333,9 +327,7 @@ async function handleFeedbackInput(ctx, feedbackText, language) {
       return ctx.reply(t('feedbackError', language));
     }
     
-    const feedbackMessage = `📝 *New Feedback*\n\n` +
-      `*User:* ${fullName} (${username})\n` +
-      `*User ID:* ${userId}\n` +
+    const feedbackMessage = `📝 *Anonymous Feedback*\n\n` +
       `*Language:* ${language}\n` +
       `*Date:* ${new Date().toLocaleString()}\n\n` +
       `*Feedback:*\n${feedbackText}`;

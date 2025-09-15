@@ -74,7 +74,7 @@ const translations = {
     dateInFuture: '❌ Birth date cannot be in the future. Please enter a valid past date.',
     invalidDate: '❌ Invalid date. Please check your input and try again.',
     
-    feedbackPrompt: '💬 *Send Feedback*\n\nPlease share your feedback, suggestions, or report any issues. Your message will be forwarded to our team.\n\n*Note:* Your username and user ID will be included with your feedback.',
+    feedbackPrompt: '💬 *Send Anonymous Feedback*\n\nPlease share your feedback, suggestions, or report any issues. Your message will be forwarded to our team anonymously.\n\n*Note:* Your identity will remain completely anonymous.',
     feedbackSent: '✅ *Feedback Sent!*\n\nThank you for your feedback. We appreciate your input and will review it soon.',
     feedbackError: '❌ *Error sending feedback*\n\nSorry, there was an error sending your feedback. Please try again later.',
     feedbackCancel: '❌ *Feedback Cancelled*\n\nYou can send feedback anytime using the Feedback button.'
@@ -155,7 +155,7 @@ const translations = {
     dateInFuture: '❌ የተወለዱበት ቀን ወደፊት ሊሆን አይችልም። እባክዎ ትክክለኛ የተለመደ ቀን ያስገቡ።',
     invalidDate: '❌ ትክክል ያልሆነ ቀን። እባክዎ ግቤትዎን ያረጋግጡ እና እንደገና ይሞክሩ።',
     
-    feedbackPrompt: '💬 *አስተያየት ላክ*\n\nእባክዎ አስተያየትዎን፣ ሀሳቦችዎን ወይም ችግሮችን ያጋሩ። መልዕክትዎ ለቡድናችን ይላካል።\n\n*ማስታወሻ:* የተጠቃሚ ስምዎ እና የተጠቃሚ መለያዎ ከአስተያየትዎ ጋር ይካተታል።',
+    feedbackPrompt: '💬 *ስም የማይገለጽ አስተያየት ላክ*\n\nእባክዎ አስተያየትዎን፣ ሀሳቦችዎን ወይም ችግሮችን ያጋሩ። መልዕክትዎ ለቡድናችን ስም የማይገለጽ ሆኖ ይላካል።\n\n*ማስታወሻ:* ማንነትዎ ሙሉ በሙሉ ስም የማይገለጽ ይሆናል።',
     feedbackSent: '✅ *አስተያየት ተላከ!*\n\nአስተያየትዎን ስላጋሩ እናመሰግናለን። በቅርቡ እንገልጸዋለን።',
     feedbackError: '❌ *አስተያየት በማስተላልፍ ላይ ስህተት*\n\nይቅርታ፣ አስተያየትዎን በማስተላልፍ ላይ ስህተት ተከስቷል። እባክዎ ቆይተው እንደገና ይሞክሩ።',
     feedbackCancel: '❌ *አስተያየት ተሰርዟል*\n\nአስተያየት በማስተላልፍ አዝራር በመጠቀም በማንኛውም ጊዜ መላክ ይችላሉ።'
@@ -236,7 +236,7 @@ const translations = {
     dateInFuture: '❌ لا يمكن أن يكون تاريخ الميلاد في المستقبل. يرجى إدخال تاريخ صحيح من الماضي.',
     invalidDate: '❌ تاريخ غير صحيح. يرجى التحقق من إدخالك والمحاولة مرة أخرى.',
     
-    feedbackPrompt: '💬 *إرسال تعليقات*\n\nيرجى مشاركة تعليقاتك أو اقتراحاتك أو الإبلاغ عن أي مشاكل. سيتم إرسال رسالتك إلى فريقنا.\n\n*ملاحظة:* سيتم تضمين اسم المستخدم ومعرف المستخدم مع تعليقاتك.',
+    feedbackPrompt: '💬 *إرسال تعليقات مجهولة*\n\nيرجى مشاركة تعليقاتك أو اقتراحاتك أو الإبلاغ عن أي مشاكل. سيتم إرسال رسالتك إلى فريقنا بشكل مجهول.\n\n*ملاحظة:* هويتك ستبقى مجهولة تماماً.',
     feedbackSent: '✅ *تم إرسال التعليقات!*\n\nشكراً لك على تعليقاتك. نقدر مدخلاتك وسنراجعها قريباً.',
     feedbackError: '❌ *خطأ في إرسال التعليقات*\n\nعذراً، حدث خطأ في إرسال تعليقاتك. يرجى المحاولة مرة أخرى لاحقاً.',
     feedbackCancel: '❌ *تم إلغاء التعليقات*\n\nيمكنك إرسال تعليقات في أي وقت باستخدام زر التعليقات.'
