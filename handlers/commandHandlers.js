@@ -3,6 +3,8 @@ const { t } = require('../translations');
 const { getUserCity, getUserLanguage, saveUserCity, saveUserLanguage } = require('../database/supabase');
 const { fetchPrayerTimes, formatPrayerTimes, handleError } = require('../services/prayerTimesService');
 const { createLanguageKeyboard, getLanguageInfo } = require('../utils/languageUtils');
+const { convertGregorianToHijri, formatDateConversion } = require('../services/hijriConversionService');
+const Calendar = require('telegram-inline-calendar');
 
 async function handleStart(ctx) {
   const userId = ctx.from.id;
@@ -23,11 +25,11 @@ async function handleStart(ctx) {
     ? Markup.keyboard([
         [`${t('btnGetTimes', language)} ${savedCity}`],
         [t('btnMyCity', language), t('btnChangeCity', language)],
-        [t('btnHelp', language), t('btnLanguage', language)]
+        [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
       ]).resize()
     : Markup.keyboard([
         [t('btnSetCity', language)],
-        [t('btnHelp', language), t('btnLanguage', language)]
+        [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
       ]).resize();
   
   ctx.replyWithMarkdown(welcomeMessage, keyboard);
@@ -76,11 +78,11 @@ async function handleLanguageChange(ctx, newLanguageCode, currentLanguage) {
     ? Markup.keyboard([
         [`${t('btnGetTimes', newLanguageCode)} ${savedCity}`],
         [t('btnMyCity', newLanguageCode), t('btnChangeCity', newLanguageCode)],
-        [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode)]
+        [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode), t('btnTools', newLanguageCode)]
       ]).resize()
     : Markup.keyboard([
         [t('btnSetCity', newLanguageCode)],
-        [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode)]
+        [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode), t('btnTools', newLanguageCode)]
       ]).resize();
   
   return ctx.replyWithMarkdown(message, keyboard);
@@ -112,7 +114,7 @@ async function handleCityInput(ctx, text, language) {
     const keyboard = Markup.keyboard([
       [`${t('btnGetTimes', language)} ${text}`],
       [t('btnMyCity', language), t('btnChangeCity', language)],
-      [t('btnHelp', language), t('btnLanguage', language)]
+      [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
     ]).resize();
     
     await ctx.replyWithMarkdown(confirmMessage, keyboard);
@@ -143,7 +145,7 @@ async function handleMyCity(ctx, savedCity, language) {
     
     const keyboard = Markup.keyboard([
       [t('btnSetCity', language)],
-      [t('btnHelp', language), t('btnLanguage', language)]
+      [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
     ]).resize();
     
     return ctx.replyWithMarkdown(message, keyboard);
@@ -154,7 +156,7 @@ async function handleMyCity(ctx, savedCity, language) {
   const keyboard = Markup.keyboard([
     [`${t('btnGetTimes', language)} ${savedCity}`],
     [t('btnChangeCity', language)],
-    [t('btnHelp', language), t('btnLanguage', language)]
+    [t('btnHelp', language), t('btnLanguage', language), t('btnTools', language)]
   ]).resize();
   
   return ctx.replyWithMarkdown(message, keyboard);
@@ -179,6 +181,53 @@ async function handleQuickPhrases(ctx, savedCity, language) {
   }
 }
 
+async function handleToolsMenu(ctx, language) {
+  const message = t('toolsMenu', language);
+  
+  const keyboard = Markup.keyboard([
+    [t('btnToHijri', language)],
+    [t('btnBackToMain', language)]
+  ]).resize();
+  
+  return ctx.replyWithMarkdown(message, keyboard);
+}
+
+async function handleToHijri(ctx, language) {
+  const message = t('selectDateToConvert', language);
+  
+  // Create calendar instance
+  const calendar = new Calendar(ctx.telegram, {
+    date_format: 'YYYY-MM-DD',
+    language: 'en',
+    bot_api: 'telegraf'
+  });
+  
+  // Store calendar instance in session for callback handling
+  ctx.session.calendar = calendar;
+  ctx.session.waitingForDate = true;
+  
+  return calendar.startNavCalendar(ctx.message);
+}
+
+async function handleDateSelection(ctx, selectedDate, language) {
+  try {
+    await ctx.sendChatAction('typing');
+    
+    const conversionData = await convertGregorianToHijri(selectedDate);
+    const formattedMessage = formatDateConversion(conversionData, language);
+    
+    // Clear session state
+    ctx.session.waitingForDate = false;
+    ctx.session.calendar = null;
+    
+    return ctx.replyWithMarkdown(formattedMessage);
+  } catch (error) {
+    ctx.session.waitingForDate = false;
+    ctx.session.calendar = null;
+    await handleError(ctx, error);
+  }
+}
+
 module.exports = {
   handleStart,
   handleHelp,
@@ -189,4 +238,7 @@ module.exports = {
   handleMyCity,
   handleSetCity,
   handleQuickPhrases,
+  handleToolsMenu,
+  handleToHijri,
+  handleDateSelection,
 };

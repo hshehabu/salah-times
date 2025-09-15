@@ -25,6 +25,8 @@ const config = {
       savedCity: null,
       waitingForCity: false,
       language: 'en',
+      waitingForDate: false,
+      calendar: null,
     }),
   },
 

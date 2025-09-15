@@ -1,5 +1,5 @@
 const { getUserLanguage } = require('../database/supabase');
-const { handleLanguageChange } = require('./commandHandlers');
+const { handleLanguageChange, handleDateSelection } = require('./commandHandlers');
 const { isValidLanguage } = require('../utils/languageUtils');
 
 async function handleCallbackQuery(ctx) {
@@ -10,6 +10,21 @@ async function handleCallbackQuery(ctx) {
   let language = await getUserLanguage(userId);
   if (!language) {
     language = ctx.session.language || 'en';
+  }
+  
+  // Handle calendar callbacks for date selection
+  if (ctx.session.waitingForDate && ctx.session.calendar) {
+    const result = ctx.session.calendar.clickButtonCalendar(ctx.callbackQuery);
+    if (result !== -1) {
+      // Date was selected
+      await ctx.answerCbQuery();
+      const selectedDate = new Date(result);
+      return await handleDateSelection(ctx, selectedDate, language);
+    } else {
+      // Calendar navigation
+      await ctx.answerCbQuery();
+      return;
+    }
   }
   
   // Handle language selection callback

@@ -33,10 +33,18 @@ const translations = {
     btnChangeCity: '📍 Change City',
     btnHelp: '❓ Help',
     btnLanguage: '🌐 Language',
+    btnTools: '🔧 Tools',
+    btnToHijri: '📅 To Hijri',
+    btnBackToMain: '⬅️ Back to Main',
     
     selectLanguage: 'Select your preferred language:',
     currentLanguage: 'Current language',
-    languageChanged: 'Language changed to'
+    languageChanged: 'Language changed to',
+    
+    toolsMenu: '🔧 *Tools*\n\nSelect a tool to use:',
+    selectDateToConvert: '📅 *Date to Hijri Converter*\n\nPlease select a Gregorian date to convert to Hijri:',
+    dateConverted: '📅 *Date Conversion*\n\n*Gregorian:* {gregorian}\n*Hijri:* {hijri}',
+    conversionError: '❌ Error converting date. Please try again.'
   },
   am: {
     welcome: '🕌 *እንኳን ደህና መጣህ*\n\nለማንኛውም ከተማ የሶላት ጊዜዎችን ያግኙ።\n\n*ፈጣን መጀመሪያ:*\n• ከታች ያሉትን አዝራሮች ይጠቀሙ\n• ወይም የከተማ ስም በቀጥታ ይላኩ\n• ለፈጣን መዳረሻ ከተማን ያስቀምጡ\n\n*ሁኔታ:*',
@@ -72,10 +80,18 @@ const translations = {
     btnChangeCity: '📍 ከተማ ቀይር',
     btnHelp: '❓ እገዛ',
     btnLanguage: '🌐 ቋንቋ',
+    btnTools: '🔧 መሳሪያዎች',
+    btnToHijri: '📅 ወደ ሂጅሪ',
+    btnBackToMain: '⬅️ ወደ ዋናው ተመለስ',
     
     selectLanguage: 'የሚመርጡትን ቋንቋ ይምረጡ:',
     currentLanguage: 'የአሁኑ ቋንቋ',
-    languageChanged: 'ቋንቋ ተቀይሯል ወደ'
+    languageChanged: 'ቋንቋ ተቀይሯል ወደ',
+    
+    toolsMenu: '🔧 *መሳሪያዎች*\n\nለመጠቀም መሳሪያ ይምረጡ:',
+    selectDateToConvert: '📅 *ወደ ሂጅሪ ቀን መቀየሪያ*\n\nወደ ሂጅሪ ለመቀየር ግሪጎሪያን ቀን ይምረጡ:',
+    dateConverted: '📅 *ቀን መቀየሪያ*\n\n*ግሪጎሪያን:* {gregorian}\n*ሂጅሪ:* {hijri}',
+    conversionError: '❌ ቀን በመቀየር ላይ ስህተት። እባክዎ እንደገና ይሞክሩ።'
   },
   ar: {
     welcome: '🕌 *أهلاً وسهلاً*\n\nاحصل على أوقات الصلاة لأي مدينة.\n\n*بداية سريعة:*\n• استخدم الأزرار أدناه\n• أو أرسل اسم المدينة مباشرة\n• احفظ المدينة للوصول السريع\n\n*الحالة:*',
@@ -111,10 +127,18 @@ const translations = {
     btnChangeCity: '📍 تغيير المدينة',
     btnHelp: '❓ مساعدة',
     btnLanguage: '🌐 اللغة',
+    btnTools: '🔧 أدوات',
+    btnToHijri: '📅 إلى الهجري',
+    btnBackToMain: '⬅️ العودة للرئيسية',
     
     selectLanguage: 'اختر لغتك المفضلة:',
     currentLanguage: 'اللغة الحالية',
-    languageChanged: 'تم تغيير اللغة إلى'
+    languageChanged: 'تم تغيير اللغة إلى',
+    
+    toolsMenu: '🔧 *الأدوات*\n\nاختر أداة للاستخدام:',
+    selectDateToConvert: '📅 *محول التاريخ إلى الهجري*\n\nيرجى اختيار تاريخ ميلادي لتحويله إلى هجري:',
+    dateConverted: '📅 *تحويل التاريخ*\n\n*الميلادي:* {gregorian}\n*الهجري:* {hijri}',
+    conversionError: '❌ خطأ في تحويل التاريخ. يرجى المحاولة مرة أخرى.'
   }
 };
 

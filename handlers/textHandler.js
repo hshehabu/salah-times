@@ -1,12 +1,15 @@
 const { getUserCity, getUserLanguage } = require('../database/supabase');
 const { t } = require('../translations');
 const {
+  handleStart,
   handleLanguageSelection,
   handleCityInput,
   handleGetTimes,
   handleMyCity,
   handleSetCity,
   handleQuickPhrases,
+  handleToolsMenu,
+  handleToHijri,
 } = require('./commandHandlers');
 
 async function handleTextMessage(ctx) {
@@ -60,6 +63,21 @@ async function handleTextMessage(ctx) {
     const cityStatus = savedCity ? `${t('yourSavedCity', language)}: *${savedCity}*` : t('noCitySaved', language);
     const helpMessage = `${t('help', language)} ${cityStatus}`;
     return ctx.replyWithMarkdown(helpMessage);
+  }
+  
+  // Handle Tools button (all languages)
+  if (text === '🔧 Tools' || text === '🔧 መሳሪያዎች' || text === '🔧 أدوات') {
+    return await handleToolsMenu(ctx, language);
+  }
+  
+  // Handle To Hijri button (all languages)
+  if (text === '📅 To Hijri' || text === '📅 ወደ ሂጅሪ' || text === '📅 إلى الهجري') {
+    return await handleToHijri(ctx, language);
+  }
+  
+  // Handle Back to Main button (all languages)
+  if (text === '⬅️ Back to Main' || text === '⬅️ ወደ ዋናው ተመለስ' || text === '⬅️ العودة للرئيسية') {
+    return await handleStart(ctx);
   }
   
   const quickPhrases = ['times', 'prayer times', 'salah', 'namaz', 'now', 'today', 
