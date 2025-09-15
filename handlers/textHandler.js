@@ -5,7 +5,6 @@ const {
   handleLanguageSelection,
   handleCityInput,
   handleGetTimes,
-  handleMyCity,
   handleSetCity,
   handleQuickPhrases,
   handlePrayerTimesMenu,
@@ -62,9 +61,6 @@ async function handleTextMessage(ctx) {
     return await handleGetTimes(ctx, city, language);
   }
   
-  if (text === '🏙️ My City' || text === '🏙️ የኔ ከተማ' || text === '🏙️ مدينتي') {
-    return await handleMyCity(ctx, savedCity, language);
-  }
   
   if (text === '📍 Set My City' || text === '📍 Change City' || 
       text === '📍 ከተማዬን አዘጋጅ' || text === '📍 ከተማ ቀይር' ||
@@ -90,7 +86,7 @@ async function handleTextMessage(ctx) {
     return await handleToHijri(ctx, language);
   }
   
-  if (text === '⏳ Age Calculator' || text === '⏳ ዕድሜ ካልኩሌተር' || text === '⏳ حاسبة العمر') {
+  if (text === '⏳ Age in Hijri' || text === '⏳ ዕድሜ በሂጅሪ' || text === '⏳ العمر بالهجري') {
     return await handleAgeCalculator(ctx, language);
   }
   
@@ -112,10 +108,29 @@ async function handleTextMessage(ctx) {
   }
   
   if (text === '⬅️ Back to Main' || text === '⬅️ ወደ ዋናው ተመለስ' || text === '⬅️ العودة للرئيسية') {
+    // Clear all waiting states
+    ctx.session.waitingForCity = false;
+    ctx.session.waitingForBirthDate = false;
+    ctx.session.waitingForFeedback = false;
+    ctx.session.currentMenu = null;
     return await handleStart(ctx);
   }
   
+  if (text === '⬅️ Back to Prayer Times' || text === '⬅️ ወደ ሶላት ጊዜዎች ተመለስ' || text === '⬅️ العودة لأوقات الصلاة') {
+    // Clear all waiting states
+    ctx.session.waitingForCity = false;
+    ctx.session.waitingForBirthDate = false;
+    ctx.session.waitingForFeedback = false;
+    ctx.session.currentMenu = null;
+    return await handlePrayerTimesMenu(ctx, language);
+  }
+  
   if (text === '⬅️ Back to Tools' || text === '⬅️ ወደ መሳሪያዎች ተመለስ' || text === '⬅️ العودة للأدوات') {
+    // Clear all waiting states
+    ctx.session.waitingForCity = false;
+    ctx.session.waitingForBirthDate = false;
+    ctx.session.waitingForFeedback = false;
+    ctx.session.currentMenu = null;
     return await handleOtherToolsMenu(ctx, language);
   }
   

@@ -141,35 +141,13 @@ async function handleGetTimes(ctx, city, language) {
   }
 }
 
-async function handleMyCity(ctx, savedCity, language) {
-  if (!savedCity) {
-    const message = `🏙️ *${t('noCitySpecified', language)}*\n\n${t('useBelowToSave', language)}`;
-    
-    const keyboard = Markup.keyboard([
-      [t('btnSetCity', language)],
-      [t('btnBackToMain', language)]
-    ]).resize();
-    
-    return ctx.replyWithMarkdown(message, keyboard);
-  }
-  
-  const message = `🏙️ *${t('yourSavedCity', language)}*\n\n${t('currentCity', language)}: *${savedCity}*\n\n${t('tapGetTimes', language)}\n${t('tapChangeCity', language)}`;
-  
-  const keyboard = Markup.keyboard([
-    [`${t('btnGetTimes', language)} ${savedCity}`],
-    [t('btnChangeCity', language)],
-    [t('btnBackToMain', language)]
-  ]).resize();
-  
-  return ctx.replyWithMarkdown(message, keyboard);
-}
 
 async function handleSetCity(ctx, language) {
   ctx.session.waitingForCity = true;
   const message = t('setCity', language);
   
   const keyboard = Markup.keyboard([
-    [t('btnBackToMain', language)]
+    [t('btnBackToPrayerTimes', language)]
   ]).resize();
   
   return ctx.replyWithMarkdown(message, keyboard);
@@ -197,7 +175,7 @@ async function handlePrayerTimesMenu(ctx, language) {
   const keyboard = savedCity 
     ? Markup.keyboard([
         [`${t('btnGetTimes', language)} ${savedCity}`, t('btnReminder', language)],
-        [t('btnMyCity', language), t('btnChangeCity', language)],
+        [t('btnChangeCity', language)],
         [t('btnBackToMain', language)]
       ]).resize()
     : Markup.keyboard([
@@ -212,8 +190,8 @@ async function handleOtherToolsMenu(ctx, language) {
   const message = t('otherToolsMenu', language);
   
   const keyboard = Markup.keyboard([
-    [t('btnToHijri', language), t('btnAgeCalculator', language)],
-    [t('btnIslamicMonths', language)],
+    [t('btnToHijri', language)],
+    [t('btnIslamicMonths', language), t('btnAgeCalculator', language)],
     [t('btnBackToMain', language)]
   ]).resize();
   
@@ -372,7 +350,7 @@ async function handleReminder(ctx, language) {
       const message = t('reminderNoCity', language);
       const keyboard = Markup.keyboard([
         [t('btnSetCity', language)],
-        [t('btnBackToMain', language)]
+        [t('btnBackToPrayerTimes', language)]
       ]).resize();
       
       return ctx.replyWithMarkdown(message, keyboard);
@@ -383,7 +361,7 @@ async function handleReminder(ctx, language) {
     
     const keyboard = Markup.keyboard([
       [reminderEnabled ? t('btnDisableReminder', language) : t('btnEnableReminder', language)],
-      [t('btnBackToMain', language)]
+      [t('btnBackToPrayerTimes', language)]
     ]).resize();
     
     return ctx.replyWithMarkdown(message, keyboard);
@@ -410,7 +388,7 @@ async function handleToggleReminder(ctx, language) {
     
     const keyboard = Markup.keyboard([
       [newStatus ? t('btnDisableReminder', language) : t('btnEnableReminder', language)],
-      [t('btnBackToMain', language)]
+      [t('btnBackToPrayerTimes', language)]
     ]).resize();
     
     return ctx.replyWithMarkdown(message, keyboard);
@@ -428,7 +406,6 @@ module.exports = {
   handleLanguageChange,
   handleCityInput,
   handleGetTimes,
-  handleMyCity,
   handleSetCity,
   handleQuickPhrases,
   handlePrayerTimesMenu,

@@ -39,6 +39,7 @@ const translations = {
     btnToHijri: '🔁 To Hijri',
     btnBackToMain: '⬅️ Back to Main',
     btnBackToTools: '⬅️ Back to Tools',
+    btnBackToPrayerTimes: '⬅️ Back to Prayer Times',
     btnFeedback: '💬 Feedback',
     btnReminder: '⏰ Reminder',
     
@@ -57,7 +58,7 @@ const translations = {
     islamicMonthsTitle: '📅 *Islamic Calendar Months*\n\n',
     islamicMonthsList: 'Here are the 12 months of the Islamic calendar:',
     
-    btnAgeCalculator: '⏳ Age Calculator',
+    btnAgeCalculator: '⏳ Age in Hijri',
     ageCalculatorPrompt: '⏳ *Age Calculator*\n\nPlease enter your birth date in the format:\n*dd/mm/yyyy*\n\n*Example:* 15/03/1990',
     ageCalculationError: '❌ Error calculating age: {error}',
     ageCalculationResult: '🧾 *Age Calculation*\n\n' +
@@ -129,6 +130,7 @@ const translations = {
     btnToHijri: '🔁 ወደ ሂጅሪ',
     btnBackToMain: '⬅️ ወደ ዋናው ተመለስ',
     btnBackToTools: '⬅️ ወደ መሳሪያዎች ተመለስ',
+    btnBackToPrayerTimes: '⬅️ ወደ ሶላት ጊዜዎች ተመለስ',
     btnFeedback: '💬 አስተያየት',
     btnReminder: '⏰ ማስታወሻ',
     
@@ -147,7 +149,7 @@ const translations = {
     islamicMonthsTitle: '📅 *የኢስላም የቀን መቁጠሪያ ወራት*\n\n',
     islamicMonthsList: 'እነዚህ የኢስላም የቀን መቁጠሪያ 12 ወራት ናቸው:',
     
-    btnAgeCalculator: '⏳ ዕድሜ ካልኩሌተር',
+    btnAgeCalculator: '⏳ ዕድሜ በሂጅሪ',
     ageCalculatorPrompt: '⏳ *ዕድሜ ካልኩሌተር*\n\nእባክዎ የተወለዱበትን ቀን በዚህ ቅርጸት ያስገቡ:\n*dd/mm/yyyy*\n\n*ምሳሌ:* 15/03/1990',
     ageCalculationError: '❌ ዕድሜ በማስላት ላይ ስህተት: {error}',
     ageCalculationResult: '🧾 *የዕድሜ ስሌት*\n\n' +
@@ -220,6 +222,7 @@ const translations = {
     btnToHijri: '🔁 إلى الهجري',
     btnBackToMain: '⬅️ العودة للرئيسية',
     btnBackToTools: '⬅️ العودة للأدوات',
+    btnBackToPrayerTimes: '⬅️ العودة لأوقات الصلاة',
     btnFeedback: '💬 تعليقات',
     btnReminder: '⏰ تذكير',
     
@@ -238,7 +241,7 @@ const translations = {
     islamicMonthsTitle: '📅 *أشهر التقويم الهجري*\n\n',
     islamicMonthsList: 'إليك الـ 12 شهراً من التقويم الهجري:',
     
-    btnAgeCalculator: '⏳ حاسبة العمر',
+    btnAgeCalculator: '⏳ العمر بالهجري',
     ageCalculatorPrompt: '⏳ *حاسبة العمر*\n\nيرجى إدخال تاريخ ميلادك بالتنسيق:\n*dd/mm/yyyy*\n\n*مثال:* 15/03/1990',
     ageCalculationError: '❌ خطأ في حساب العمر: {error}',
     ageCalculationResult: '🧾 *حساب العمر*\n\n' +
