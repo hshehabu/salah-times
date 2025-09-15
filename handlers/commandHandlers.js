@@ -1,6 +1,6 @@
 const { Markup } = require('telegraf');
 const { t } = require('../translations');
-const { getUserCity, getUserLanguage, saveUserCity, saveUserLanguage } = require('../database/supabase');
+const { getUserCity, getUserLanguage, saveUserCity, saveUserLanguage, getUserReminder, saveUserReminder } = require('../database/supabase');
 const { fetchPrayerTimes, formatPrayerTimes, handleError } = require('../services/prayerTimesService');
 const { createLanguageKeyboard, getLanguageInfo } = require('../utils/languageUtils');
 const { convertGregorianToHijri, formatDateConversion } = require('../services/hijriConversionService');
@@ -196,7 +196,7 @@ async function handlePrayerTimesMenu(ctx, language) {
   
   const keyboard = savedCity 
     ? Markup.keyboard([
-        [`${t('btnGetTimes', language)} ${savedCity}`],
+        [`${t('btnGetTimes', language)} ${savedCity}`, [t('btnReminder', language)]],
         [t('btnMyCity', language), t('btnChangeCity', language)],
         [t('btnBackToMain', language)]
       ]).resize()
@@ -362,6 +362,65 @@ async function handleFeedbackInput(ctx, feedbackText, language) {
   }
 }
 
+async function handleReminder(ctx, language) {
+  try {
+    const userId = ctx.from.id;
+    const savedCity = await getUserCity(userId) || ctx.session.savedCity;
+    const reminderEnabled = await getUserReminder(userId);
+    
+    if (!savedCity) {
+      const message = t('reminderNoCity', language);
+      const keyboard = Markup.keyboard([
+        [t('btnSetCity', language)],
+        [t('btnBackToMain', language)]
+      ]).resize();
+      
+      return ctx.replyWithMarkdown(message, keyboard);
+    }
+    
+    const statusText = reminderEnabled ? t('reminderEnabled', language) : t('reminderDisabled', language);
+    const message = `${t('reminderMenu', language)} ${statusText}`;
+    
+    const keyboard = Markup.keyboard([
+      [reminderEnabled ? t('btnDisableReminder', language) : t('btnEnableReminder', language)],
+      [t('btnBackToMain', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
+    
+  } catch (error) {
+    console.error('Error handling reminder:', error);
+    return ctx.reply(t('reminderError', language));
+  }
+}
+
+async function handleToggleReminder(ctx, language) {
+  try {
+    const userId = ctx.from.id;
+    const currentReminderStatus = await getUserReminder(userId);
+    const newStatus = !currentReminderStatus;
+    
+    const success = await saveUserReminder(userId, newStatus);
+    
+    if (!success) {
+      return ctx.reply(t('reminderError', language));
+    }
+    
+    const message = newStatus ? t('reminderEnabled', language) : t('reminderDisabled', language);
+    
+    const keyboard = Markup.keyboard([
+      [newStatus ? t('btnDisableReminder', language) : t('btnEnableReminder', language)],
+      [t('btnBackToMain', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
+    
+  } catch (error) {
+    console.error('Error toggling reminder:', error);
+    return ctx.reply(t('reminderError', language));
+  }
+}
+
 module.exports = {
   handleStart,
   handleHelp,
@@ -381,6 +440,8 @@ module.exports = {
   handleIslamicMonths,
   handleFeedback,
   handleFeedbackInput,
+  handleReminder,
+  handleToggleReminder,
   setGlobalCalendar,
   getGlobalCalendar,
 };

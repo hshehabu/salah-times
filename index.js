@@ -1,9 +1,14 @@
 const config = require('./config');
 const { createBot, startBot } = require('./bot/setup');
+const ReminderService = require('./services/reminderService');
 const fs = require('fs');
 const path = require('path');
 
 const bot = createBot();
+
+// Initialize reminder service
+const reminderService = new ReminderService(bot);
+reminderService.start();
 
 // Serve static files
 function serveStaticFile(filePath, contentType) {

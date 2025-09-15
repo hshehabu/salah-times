@@ -45,6 +45,7 @@ async function saveUserData(userId, data) {
         user_id: userId,
         saved_city: data.saved_city,
         language: data.language,
+        reminder_enabled: data.reminder_enabled || false,
         updated_at: new Date().toISOString()
       }, {
         onConflict: 'user_id'
@@ -84,6 +85,42 @@ async function saveUserLanguage(userId, language) {
   return await saveUserData(userId, userData);
 }
 
+async function getUserReminder(userId) {
+  const userData = await getUserData(userId);
+  return userData ? userData.reminder_enabled : false;
+}
+
+async function saveUserReminder(userId, enabled) {
+  const userData = await getUserData(userId) || { saved_city: null, language: 'en', reminder_enabled: false };
+  userData.reminder_enabled = enabled;
+  return await saveUserData(userId, userData);
+}
+
+async function getAllUsersWithReminders() {
+  try {
+    if (!config.database.supabaseUrl || !config.database.supabaseAnonKey) {
+      console.log('Supabase not configured');
+      return [];
+    }
+    
+    const { data, error } = await supabase
+      .from('users')
+      .select('user_id, saved_city, language')
+      .eq('reminder_enabled', true)
+      .not('saved_city', 'is', null);
+    
+    if (error) {
+      console.error('Error getting users with reminders:', error);
+      return [];
+    }
+    
+    return data || [];
+  } catch (error) {
+    console.error('Error getting users with reminders:', error);
+    return [];
+  }
+}
+
 module.exports = {
   getUserData,
   saveUserData,
@@ -91,4 +128,7 @@ module.exports = {
   saveUserCity,
   getUserLanguage,
   saveUserLanguage,
+  getUserReminder,
+  saveUserReminder,
+  getAllUsersWithReminders,
 };

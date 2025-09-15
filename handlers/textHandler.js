@@ -16,6 +16,8 @@ const {
   handleIslamicMonths,
   handleFeedback,
   handleFeedbackInput,
+  handleReminder,
+  handleToggleReminder,
 } = require('./commandHandlers');
 
 async function handleTextMessage(ctx) {
@@ -98,6 +100,15 @@ async function handleTextMessage(ctx) {
   
   if (text === '💬 Feedback' || text === '💬 አስተያየት' || text === '💬 تعليقات') {
     return await handleFeedback(ctx, language);
+  }
+  
+  if (text === '⏰ Reminder' || text === '⏰ ማስታወሻ' || text === '⏰ تذكير') {
+    return await handleReminder(ctx, language);
+  }
+  
+  if (text === '✅ Enable Reminder' || text === '✅ ማስታወሻ አንቃ' || text === '✅ تفعيل التذكير' ||
+      text === '❌ Disable Reminder' || text === '❌ ማስታወሻ አሰርዝ' || text === '❌ إلغاء التذكير') {
+    return await handleToggleReminder(ctx, language);
   }
   
   if (text === '⬅️ Back to Main' || text === '⬅️ ወደ ዋናው ተመለስ' || text === '⬅️ العودة للرئيسية') {
