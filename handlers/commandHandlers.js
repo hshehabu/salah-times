@@ -174,8 +174,8 @@ async function handlePrayerTimesMenu(ctx, language) {
   
   const keyboard = savedCity 
     ? Markup.keyboard([
-        [`${t('btnGetTimes', language)} ${savedCity}`, t('btnReminder', language)],
-        [t('btnChangeCity', language)],
+        [`${t('btnGetTimes', language)} ${savedCity}`],
+        [t('btnChangeCity', language), t('btnReminder', language)],
         [t('btnBackToMain', language)]
       ]).resize()
     : Markup.keyboard([
@@ -190,8 +190,8 @@ async function handleOtherToolsMenu(ctx, language) {
   const message = t('otherToolsMenu', language);
   
   const keyboard = Markup.keyboard([
-    [t('btnToHijri', language)],
-    [t('btnIslamicMonths', language), t('btnAgeCalculator', language)],
+    [t('btnToHijri', language), t('btnAgeCalculator', language)],
+    [t('btnIslamicMonths', language)],
     [t('btnBackToMain', language)]
   ]).resize();
   
