@@ -116,44 +116,6 @@ function getDayOfWeek(date) {
   return days[date.getDay()];
 }
 
-/**
- * Calculate days until next birthday
- * @param {Date} birthDate - Birth date
- * @param {Date} currentDate - Current date (defaults to today)
- * @returns {number} Days until next birthday
- */
-function getDaysUntilBirthday(birthDate, currentDate = new Date()) {
-  const currentYear = currentDate.getFullYear();
-  let nextBirthday = new Date(currentYear, birthDate.getMonth(), birthDate.getDate());
-  
-  if (nextBirthday <= currentDate) {
-    nextBirthday = new Date(currentYear + 1, birthDate.getMonth(), birthDate.getDate());
-  }
-  
-  return Math.ceil((nextBirthday - currentDate) / (1000 * 60 * 60 * 24));
-}
-
-/**
- * Calculate next birthday age in Gregorian calendar
- * @param {Date} birthDate - Birth date
- * @param {Date} currentDate - Current date (defaults to today)
- * @returns {number} Age on next birthday
- */
-function getNextBirthdayAgeGregorian(birthDate, currentDate = new Date()) {
-  const gregorianAge = calculateGregorianAge(birthDate, currentDate);
-  return gregorianAge.years + 1;
-}
-
-/**
- * Calculate next birthday age in Hijri calendar
- * @param {Date} birthDate - Birth date
- * @param {Date} currentDate - Current date (defaults to today)
- * @returns {number} Age on next birthday in Hijri
- */
-async function getNextBirthdayAgeHijri(birthDate, currentDate = new Date()) {
-  const hijriAge = await calculateHijriAge(birthDate, currentDate);
-  return hijriAge.years + 1;
-}
 
 /**
  * Main age calculation function
@@ -171,9 +133,6 @@ async function calculateAge(birthDateString, language = 'en') {
     const hijriAge = await calculateHijriAge(birthDate, currentDate);
     
     const dayOfWeek = getDayOfWeek(birthDate);
-    const daysUntilBirthday = getDaysUntilBirthday(birthDate, currentDate);
-    const nextBirthdayAgeGregorian = getNextBirthdayAgeGregorian(birthDate, currentDate);
-    const nextBirthdayAgeHijri = await getNextBirthdayAgeHijri(birthDate, currentDate);
     
     return {
       success: true,
@@ -187,10 +146,7 @@ async function calculateAge(birthDateString, language = 'en') {
         years: hijriAge.years,
         months: hijriAge.months,
         days: hijriAge.days
-      },
-      daysUntilBirthday,
-      nextBirthdayAgeGregorian,
-      nextBirthdayAgeHijri
+      }
     };
   } catch (error) {
     return {
@@ -211,30 +167,20 @@ function formatAgeCalculation(ageData, language = 'en') {
     return t('ageCalculationError', language).replace('{error}', ageData.error);
   }
 
-  const { birthDate, gregorianAge, hijriAge, daysUntilBirthday, nextBirthdayAgeGregorian, nextBirthdayAgeHijri } = ageData;
+  const { birthDate, gregorianAge, hijriAge } = ageData;
   
   const birthGregorian = birthDate.gregorian.toLocaleDateString('en-GB');
   const birthHijri = `${birthDate.hijri.day} ${birthDate.hijri.month.en} ${birthDate.hijri.year} AH`;
   
   const gregorianAgeText = `${gregorianAge.years} ${t('years', language)}, ${gregorianAge.months} ${t('months', language)}, ${gregorianAge.days} ${t('days', language)}`;
   const hijriAgeText = `${hijriAge.years} ${t('years', language)}, ${hijriAge.months} ${t('months', language)}, ${hijriAge.days} ${t('days', language)}`;
-  
-  const birthdayMessageGregorian = daysUntilBirthday === 0 
-    ? t('birthdayTodayGregorian', language).replace('{age}', nextBirthdayAgeGregorian)
-    : t('youWillBeGregorian', language).replace('{age}', nextBirthdayAgeGregorian).replace('{days}', daysUntilBirthday);
-    
-  const birthdayMessageHijri = daysUntilBirthday === 0 
-    ? t('birthdayTodayHijri', language).replace('{age}', nextBirthdayAgeHijri)
-    : t('youWillBeHijri', language).replace('{age}', nextBirthdayAgeHijri).replace('{days}', daysUntilBirthday);
 
   return t('ageCalculationResult', language)
     .replace('{birthGregorian}', birthGregorian)
     .replace('{birthHijri}', birthHijri)
     .replace('{birthDayOfWeek}', birthDate.dayOfWeek)
     .replace('{gregorianAge}', gregorianAgeText)
-    .replace('{hijriAge}', hijriAgeText)
-    .replace('{birthdayMessageGregorian}', birthdayMessageGregorian)
-    .replace('{birthdayMessageHijri}', birthdayMessageHijri);
+    .replace('{hijriAge}', hijriAgeText);
 }
 
 module.exports = {
@@ -242,7 +188,5 @@ module.exports = {
   formatAgeCalculation,
   parseDateString,
   calculateGregorianAge,
-  calculateHijriAge,
-  getNextBirthdayAgeGregorian,
-  getNextBirthdayAgeHijri
+  calculateHijriAge
 };
