@@ -50,16 +50,27 @@ const translations = {
     islamicMonthsTitle: '📅 *Islamic Calendar Months*\n\n',
     islamicMonthsList: 'Here are the 12 months of the Islamic calendar:',
     
-    // Age Calculator
-    btnAgeCalculator: '🎂 Age Calculator',
-    ageCalculatorPrompt: '🎂 *Age Calculator*\n\nPlease enter your birth date in the format:\n*dd/mm/yyyy*\n\n*Example:* 15/03/1990',
+    btnAgeCalculator: '⏳ Age Calculator',
+    ageCalculatorPrompt: '⏳ *Age Calculator*\n\nPlease enter your birth date in the format:\n*dd/mm/yyyy*\n\n*Example:* 15/03/1990',
     ageCalculationError: '❌ Error calculating age: {error}',
-    ageCalculationResult: '🎂 *Age Calculation*\n\n*Birth Date (Gregorian):* {birthGregorian}\n*Birth Date (Hijri):* {birthHijri}\n*Day of Week:* {birthDayOfWeek}\n\n*Current Date (Gregorian):* {currentGregorian}\n*Current Date (Hijri):* {currentHijri}\n\n*Age in Gregorian:* {gregorianAge}\n*Age in Hijri:* {hijriAge}\n\n{birthdayMessage}',
+    ageCalculationResult: '⏳ *Age Calculation*\n\n' +
+                        '*Birth Date (Gregorian):* {birthGregorian}\n' +
+                        '*Birth Date (Hijri):* {birthHijri}\n' +
+                        '*Day of Week:* {birthDayOfWeek}\n\n' +
+                        '*Current Age (Gregorian):* {gregorianAge}\n' +
+                        '*Current Age (Hijri):* {hijriAge}\n\n' +
+                        '*Birthday Info:*\n' +
+                        '• Gregorian: {birthdayMessageGregorian}\n' +
+                        '• Hijri: {birthdayMessageHijri}',
     years: 'years',
     months: 'months', 
     days: 'days',
     birthdayToday: '🎉 *Happy Birthday!* Today is your birthday!',
-    daysUntilBirthday: '🎂 *{days} days* until your next birthday!',
+    daysUntilBirthday: '⏳ *{days} days* until your next birthday!',
+    birthdayTodayGregorian: '🎉 *Happy Birthday!* Today you turn {age} years old (Gregorian)!',
+    youWillBeGregorian: '🎂 You will be {age} years old in {days} days (Gregorian)',
+    birthdayTodayHijri: '🎉 *Happy Birthday!* Today you turn {age} years old (Hijri)!',
+    youWillBeHijri: '🎂 You will be {age} years old in {days} days (Hijri)',
     invalidDateFormat: '❌ Invalid date format. Please use dd/mm/yyyy format.\n\n*Example:* 15/03/1990',
     dateInFuture: '❌ Birth date cannot be in the future. Please enter a valid past date.',
     invalidDate: '❌ Invalid date. Please check your input and try again.'
@@ -115,16 +126,27 @@ const translations = {
     islamicMonthsTitle: '📅 *የኢስላም የቀን መቁጠሪያ ወራት*\n\n',
     islamicMonthsList: 'እነዚህ የኢስላም የቀን መቁጠሪያ 12 ወራት ናቸው:',
     
-    // Age Calculator
-    btnAgeCalculator: '🎂 ዕድሜ ካልኩሌተር',
-    ageCalculatorPrompt: '🎂 *ዕድሜ ካልኩሌተር*\n\nእባክዎ የተወለዱበትን ቀን በዚህ ቅርጸት ያስገቡ:\n*dd/mm/yyyy*\n\n*ምሳሌ:* 15/03/1990',
+    btnAgeCalculator: '⏳ ዕድሜ ካልኩሌተር',
+    ageCalculatorPrompt: '⏳ *ዕድሜ ካልኩሌተር*\n\nእባክዎ የተወለዱበትን ቀን በዚህ ቅርጸት ያስገቡ:\n*dd/mm/yyyy*\n\n*ምሳሌ:* 15/03/1990',
     ageCalculationError: '❌ ዕድሜ በማስላት ላይ ስህተት: {error}',
-    ageCalculationResult: '🎂 *ዕድሜ ስሌት*\n\n*የተወለዱበት ቀን (ግሪጎሪያን):* {birthGregorian}\n*የተወለዱበት ቀን (ሂጅሪ):* {birthHijri}\n*የሳምንት ቀን:* {birthDayOfWeek}\n\n*የአሁኑ ቀን (ግሪጎሪያን):* {currentGregorian}\n*የአሁኑ ቀን (ሂጅሪ):* {currentHijri}\n\n*ዕድሜ በግሪጎሪያን:* {gregorianAge}\n*ዕድሜ በሂጅሪ:* {hijriAge}\n\n{birthdayMessage}',
+    ageCalculationResult: '⏳ *ዕድሜ ስሌት*\n\n' +
+                        '*የተወለዱበት ቀን (ግሪጎሪያን):* {birthGregorian}\n' +
+                        '*የተወለዱበት ቀን (ሂጅሪ):* {birthHijri}\n' +
+                        '*የሳምንት ቀን:* {birthDayOfWeek}\n\n' +
+                        '*የአሁኑ ዕድሜ (ግሪጎሪያን):* {gregorianAge}\n' +
+                        '*የአሁኑ ዕድሜ (ሂጅሪ):* {hijriAge}\n\n' +
+                        '*የልደት ቀን መረጃ:*\n' +
+                        '• ግሪጎሪያን: {birthdayMessageGregorian}\n' +
+                        '• ሂጅሪ: {birthdayMessageHijri}',
     years: 'ዓመታት',
     months: 'ወራት',
     days: 'ቀናት',
     birthdayToday: '🎉 *የልደት ቀን በጎ ይሁን!* ዛሬ የልደት ቀንዎ ነው!',
-    daysUntilBirthday: '🎂 *{days} ቀናት* እስከ ቀጣዩ የልደት ቀንዎ!',
+    daysUntilBirthday: '⏳ *{days} ቀናት* እስከ ቀጣዩ የልደት ቀንዎ!',
+    birthdayTodayGregorian: '🎉 *የልደት ቀን በጎ ይሁን!* ዛሬ {age} ዓመት ትሆናለህ (ግሪጎሪያን)!',
+    youWillBeGregorian: '🎂 በ {days} ቀናት {age} ዓመት ትሆናለህ (ግሪጎሪያን)',
+    birthdayTodayHijri: '🎉 *የልደት ቀን በጎ ይሁን!* ዛሬ {age} ዓመት ትሆናለህ (ሂጅሪ)!',
+    youWillBeHijri: '🎂 በ {days} ቀናት {age} ዓመት ትሆናለህ (ሂጅሪ)',
     invalidDateFormat: '❌ ትክክል ያልሆነ የቀን ቅርጸት። እባክዎ dd/mm/yyyy ቅርጸት ይጠቀሙ።\n\n*ምሳሌ:* 15/03/1990',
     dateInFuture: '❌ የተወለዱበት ቀን ወደፊት ሊሆን አይችልም። እባክዎ ትክክለኛ የተለመደ ቀን ያስገቡ።',
     invalidDate: '❌ ትክክል ያልሆነ ቀን። እባክዎ ግቤትዎን ያረጋግጡ እና እንደገና ይሞክሩ።'
@@ -180,16 +202,27 @@ const translations = {
     islamicMonthsTitle: '📅 *أشهر التقويم الهجري*\n\n',
     islamicMonthsList: 'إليك الـ 12 شهراً من التقويم الهجري:',
     
-    // Age Calculator
-    btnAgeCalculator: '🎂 حاسبة العمر',
-    ageCalculatorPrompt: '🎂 *حاسبة العمر*\n\nيرجى إدخال تاريخ ميلادك بالتنسيق:\n*dd/mm/yyyy*\n\n*مثال:* 15/03/1990',
+    btnAgeCalculator: '⏳ حاسبة العمر',
+    ageCalculatorPrompt: '⏳ *حاسبة العمر*\n\nيرجى إدخال تاريخ ميلادك بالتنسيق:\n*dd/mm/yyyy*\n\n*مثال:* 15/03/1990',
     ageCalculationError: '❌ خطأ في حساب العمر: {error}',
-    ageCalculationResult: '🎂 *حساب العمر*\n\n*تاريخ الميلاد (ميلادي):* {birthGregorian}\n*تاريخ الميلاد (هجري):* {birthHijri}\n*يوم الأسبوع:* {birthDayOfWeek}\n\n*التاريخ الحالي (ميلادي):* {currentGregorian}\n*التاريخ الحالي (هجري):* {currentHijri}\n\n*العمر بالميلادي:* {gregorianAge}\n*العمر بالهجري:* {hijriAge}\n\n{birthdayMessage}',
+    ageCalculationResult: '⏳ *حساب العمر*\n\n' +
+                        '*تاريخ الميلاد (ميلادي):* {birthGregorian}\n' +
+                        '*تاريخ الميلاد (هجري):* {birthHijri}\n' +
+                        '*يوم الأسبوع:* {birthDayOfWeek}\n\n' +
+                        '*العمر الحالي (ميلادي):* {gregorianAge}\n' +
+                        '*العمر الحالي (هجري):* {hijriAge}\n\n' +
+                        '*معلومات عيد الميلاد:*\n' +
+                        '• ميلادي: {birthdayMessageGregorian}\n' +
+                        '• هجري: {birthdayMessageHijri}',
     years: 'سنوات',
     months: 'أشهر',
     days: 'أيام',
     birthdayToday: '🎉 *عيد ميلاد سعيد!* اليوم هو عيد ميلادك!',
-    daysUntilBirthday: '🎂 *{days} أيام* حتى عيد ميلادك القادم!',
+    daysUntilBirthday: '⏳ *{days} أيام* حتى عيد ميلادك القادم!',
+    birthdayTodayGregorian: '🎉 *عيد ميلاد سعيد!* اليوم تصبح {age} سنة (ميلادي)!',
+    youWillBeGregorian: '🎂 ستصبح {age} سنة خلال {days} أيام (ميلادي)',
+    birthdayTodayHijri: '🎉 *عيد ميلاد سعيد!* اليوم تصبح {age} سنة (هجري)!',
+    youWillBeHijri: '🎂 ستصبح {age} سنة خلال {days} أيام (هجري)',
     invalidDateFormat: '❌ تنسيق تاريخ غير صحيح. يرجى استخدام تنسيق dd/mm/yyyy.\n\n*مثال:* 15/03/1990',
     dateInFuture: '❌ لا يمكن أن يكون تاريخ الميلاد في المستقبل. يرجى إدخال تاريخ صحيح من الماضي.',
     invalidDate: '❌ تاريخ غير صحيح. يرجى التحقق من إدخالك والمحاولة مرة أخرى.'

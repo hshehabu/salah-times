@@ -197,8 +197,7 @@ async function handleToolsMenu(ctx, language) {
   const message = t('toolsMenu', language);
   
   const keyboard = Markup.keyboard([
-    [t('btnToHijri', language)],
-    [t('btnAgeCalculator', language)],
+    [t('btnToHijri', language), t('btnAgeCalculator', language)],
     [t('btnIslamicMonths', language)],
     [t('btnBackToMain', language)]
   ]).resize();
@@ -211,7 +210,6 @@ async function handleToHijri(ctx, language) {
     return ctx.reply('❌ Calendar service is not available. Please try again later.');
   }
   
-  // Set session state for date selection
   ctx.session.waitingForDate = true;
   
   return globalCalendar.startNavCalendar(ctx.message);
@@ -224,7 +222,6 @@ async function handleDateSelection(ctx, selectedDate, language) {
     const conversionData = await convertGregorianToHijri(selectedDate);
     const formattedMessage = formatDateConversion(conversionData, language);
     
-    // Clear session state
     ctx.session.waitingForDate = false;
     
     return ctx.replyWithMarkdown(formattedMessage);
@@ -235,7 +232,6 @@ async function handleDateSelection(ctx, selectedDate, language) {
 }
 
 async function handleAgeCalculator(ctx, language) {
-  // Set session state for age calculator input
   ctx.session.waitingForBirthDate = true;
   
   const message = t('ageCalculatorPrompt', language);
@@ -254,7 +250,6 @@ async function handleBirthDateInput(ctx, birthDateString, language) {
     const ageData = await calculateAge(birthDateString, language);
     const formattedMessage = formatAgeCalculation(ageData, language);
     
-    // Clear session state
     ctx.session.waitingForBirthDate = false;
     
     const keyboard = Markup.keyboard([
@@ -273,11 +268,9 @@ async function handleIslamicMonths(ctx, language) {
   try {
     await ctx.sendChatAction('typing');
     
-    // Load Islamic months data
     const islamicMonthsData = require('../data/islamicMonths.json');
     const months = islamicMonthsData.data;
     
-    // Build the months list
     let monthsList = '';
     for (let i = 1; i <= 12; i++) {
       const month = months[i.toString()];
