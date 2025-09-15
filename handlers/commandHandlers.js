@@ -35,7 +35,8 @@ async function handleStart(ctx) {
 
   const keyboard = Markup.keyboard([
     [t('btnPrayerTimes', language), t('btnOtherTools', language)],
-    [t('btnHelp', language), t('btnLanguage', language)]
+    [t('btnHelp', language), t('btnLanguage', language)],
+    [t('btnFeedback', language)]
   ]).resize();
   
   ctx.replyWithMarkdown(welcomeMessage, keyboard);
@@ -82,7 +83,8 @@ async function handleLanguageChange(ctx, newLanguageCode, currentLanguage) {
   
   const keyboard = Markup.keyboard([
     [t('btnPrayerTimes', newLanguageCode), t('btnOtherTools', newLanguageCode)],
-    [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode)]
+    [t('btnHelp', newLanguageCode), t('btnLanguage', newLanguageCode)],
+    [t('btnFeedback', newLanguageCode)]
   ]).resize();
   
   return ctx.replyWithMarkdown(message, keyboard);
@@ -113,7 +115,8 @@ async function handleCityInput(ctx, text, language) {
     
     const keyboard = Markup.keyboard([
       [t('btnPrayerTimes', language), t('btnOtherTools', language)],
-      [t('btnHelp', language), t('btnLanguage', language)]
+      [t('btnHelp', language), t('btnLanguage', language)],
+      [t('btnFeedback', language)]
     ]).resize();
     
     await ctx.replyWithMarkdown(confirmMessage, keyboard);
@@ -217,18 +220,6 @@ async function handleOtherToolsMenu(ctx, language) {
   return ctx.replyWithMarkdown(message, keyboard);
 }
 
-async function handleToolsMenu(ctx, language) {
-  const message = t('toolsMenu', language);
-  
-  const keyboard = Markup.keyboard([
-    [t('btnToHijri', language), t('btnAgeCalculator', language)],
-    [t('btnIslamicMonths', language)],
-    [t('btnBackToMain', language)]
-  ]).resize();
-  
-  return ctx.replyWithMarkdown(message, keyboard);
-}
-
 async function handleToHijri(ctx, language) {
   if (!globalCalendar) {
     return ctx.reply('❌ Calendar service is not available. Please try again later.');
@@ -315,6 +306,70 @@ async function handleIslamicMonths(ctx, language) {
   }
 }
 
+async function handleFeedback(ctx, language) {
+  ctx.session.waitingForFeedback = true;
+  
+  const message = t('feedbackPrompt', language);
+  
+  const keyboard = Markup.keyboard([
+    [t('btnBackToMain', language)]
+  ]).resize();
+  
+  return ctx.replyWithMarkdown(message, keyboard);
+}
+
+async function handleFeedbackInput(ctx, feedbackText, language) {
+  try {
+    const userId = ctx.from.id;
+    const username = ctx.from.username ? `@${ctx.from.username}` : 'No username';
+    const firstName = ctx.from.first_name || '';
+    const lastName = ctx.from.last_name || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+    
+    const { FEEDBACK_RECIPIENT } = require('../config');
+    
+    if (!FEEDBACK_RECIPIENT) {
+      console.error('FEEDBACK_RECIPIENT not configured');
+      return ctx.reply(t('feedbackError', language));
+    }
+    
+    const feedbackMessage = `📝 *New Feedback*\n\n` +
+      `*User:* ${fullName} (${username})\n` +
+      `*User ID:* ${userId}\n` +
+      `*Language:* ${language}\n` +
+      `*Date:* ${new Date().toLocaleString()}\n\n` +
+      `*Feedback:*\n${feedbackText}`;
+    
+    await ctx.telegram.sendMessage(FEEDBACK_RECIPIENT, feedbackMessage, { parse_mode: 'Markdown' });
+    
+    ctx.session.waitingForFeedback = false;
+    
+    const successMessage = t('feedbackSent', language);
+    
+    const keyboard = Markup.keyboard([
+      [t('btnPrayerTimes', language), t('btnOtherTools', language)],
+      [t('btnHelp', language), t('btnLanguage', language)],
+      [t('btnFeedback', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(successMessage, keyboard);
+    
+  } catch (error) {
+    ctx.session.waitingForFeedback = false;
+    console.error('Error sending feedback:', error);
+    
+    const errorMessage = t('feedbackError', language);
+    
+    const keyboard = Markup.keyboard([
+      [t('btnPrayerTimes', language), t('btnOtherTools', language)],
+      [t('btnHelp', language), t('btnLanguage', language)],
+      [t('btnFeedback', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(errorMessage, keyboard);
+  }
+}
+
 module.exports = {
   handleStart,
   handleHelp,
@@ -327,12 +382,13 @@ module.exports = {
   handleQuickPhrases,
   handlePrayerTimesMenu,
   handleOtherToolsMenu,
-  handleToolsMenu,
   handleToHijri,
   handleDateSelection,
   handleAgeCalculator,
   handleBirthDateInput,
   handleIslamicMonths,
+  handleFeedback,
+  handleFeedbackInput,
   setGlobalCalendar,
   getGlobalCalendar,
 };

@@ -3,13 +3,11 @@ const { t } = require('../translations');
 
 async function convertGregorianToHijri(gregorianDate) {
   try {
-    // Format date as DD-MM-YYYY for the API
     const day = String(gregorianDate.getDate()).padStart(2, '0');
     const month = String(gregorianDate.getMonth() + 1).padStart(2, '0');
     const year = gregorianDate.getFullYear();
     const dateStr = `${day}-${month}-${year}`;
     
-    // Use Al Adhan API to get hijri date for the given gregorian date
     const url = `${config.api.baseUrl}/gToH/${dateStr}`;
     const response = await fetch(url);
     
@@ -57,10 +55,8 @@ function formatDateConversion(conversionData, language = 'en') {
   
   const { gregorian, hijri } = conversionData;
   
-  // Format gregorian date
   const gregorianFormatted = `${gregorian.weekday?.en || ''}, ${gregorian.month?.en || ''} ${gregorian.day}, ${gregorian.year}`;
   
-  // Format hijri date
   const hijriFormatted = `${hijri.day} ${hijri.month?.en || ''} ${hijri.year} AH`;
   
   return t('dateConverted', language)

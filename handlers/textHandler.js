@@ -10,11 +10,12 @@ const {
   handleQuickPhrases,
   handlePrayerTimesMenu,
   handleOtherToolsMenu,
-  handleToolsMenu,
   handleToHijri,
   handleAgeCalculator,
   handleBirthDateInput,
   handleIslamicMonths,
+  handleFeedback,
+  handleFeedbackInput,
 } = require('./commandHandlers');
 
 async function handleTextMessage(ctx) {
@@ -29,6 +30,7 @@ async function handleTextMessage(ctx) {
   let language = await getUserLanguage(userId);
   let waitingForCity = ctx.session.waitingForCity;
   let waitingForBirthDate = ctx.session.waitingForBirthDate;
+  let waitingForFeedback = ctx.session.waitingForFeedback;
   
   if (savedCity === null) {
     savedCity = ctx.session.savedCity;
@@ -47,6 +49,10 @@ async function handleTextMessage(ctx) {
   
   if (waitingForBirthDate) {
     return await handleBirthDateInput(ctx, text, language);
+  }
+  
+  if (waitingForFeedback) {
+    return await handleFeedbackInput(ctx, text, language);
   }
   
   if (text.startsWith('🕌 Get Times for ') || text.startsWith('🕌 ጊዜዎች አግኝ ለ ') || text.startsWith('🕌 احصل على الأوقات لـ ')) {
@@ -78,10 +84,6 @@ async function handleTextMessage(ctx) {
     return await handleOtherToolsMenu(ctx, language);
   }
   
-  if (text === '🔧 Tools' || text === '🔧 መሳሪያዎች' || text === '🔧 أدوات') {
-    return await handleToolsMenu(ctx, language);
-  }
-  
   if (text === '🔁 To Hijri' || text === '🔁 ወደ ሂጅሪ' || text === '🔁 إلى الهجري') {
     return await handleToHijri(ctx, language);
   }
@@ -92,6 +94,10 @@ async function handleTextMessage(ctx) {
   
   if (text === '📅 Islamic Months' || text === '📅 የኢስላም ወራት' || text === '📅 الأشهر الهجرية') {
     return await handleIslamicMonths(ctx, language);
+  }
+  
+  if (text === '💬 Feedback' || text === '💬 አስተያየት' || text === '💬 تعليقات') {
+    return await handleFeedback(ctx, language);
   }
   
   if (text === '⬅️ Back to Main' || text === '⬅️ ወደ ዋናው ተመለስ' || text === '⬅️ العودة للرئيسية') {

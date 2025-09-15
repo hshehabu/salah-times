@@ -28,13 +28,11 @@ function formatPrayerTimes(data, language = 'en') {
 
   const timings = data.data.timings;
   
-  // Extract timezone from API response
   let timezone = null;
   if (data.data.meta && data.data.meta.timezone) {
     timezone = data.data.meta.timezone;
   }
   
-  // Extract location information
   let location = data.originalCity || 'Your Location';
   
   if (data.data.meta && data.data.meta.timezone) {
@@ -47,7 +45,6 @@ function formatPrayerTimes(data, language = 'en') {
     }
   }
   
-  // Format location name
   if (location && location !== 'Your Location') {
     location = location.replace(/\s+/g, ' ').trim();
     location = location.split(' ').map(word => 

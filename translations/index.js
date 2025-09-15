@@ -39,6 +39,7 @@ const translations = {
     btnToHijri: '🔁 To Hijri',
     btnBackToMain: '⬅️ Back to Main',
     btnBackToTools: '⬅️ Back to Tools',
+    btnFeedback: '💬 Feedback',
     
     selectLanguage: 'Select your preferred language:',
     currentLanguage: 'Current language',
@@ -71,7 +72,12 @@ const translations = {
     days: 'days',
     invalidDateFormat: '❌ Invalid date format. Please use dd/mm/yyyy format.\n\n*Example:* 15/03/1990',
     dateInFuture: '❌ Birth date cannot be in the future. Please enter a valid past date.',
-    invalidDate: '❌ Invalid date. Please check your input and try again.'
+    invalidDate: '❌ Invalid date. Please check your input and try again.',
+    
+    feedbackPrompt: '💬 *Send Feedback*\n\nPlease share your feedback, suggestions, or report any issues. Your message will be forwarded to our team.\n\n*Note:* Your username and user ID will be included with your feedback.',
+    feedbackSent: '✅ *Feedback Sent!*\n\nThank you for your feedback. We appreciate your input and will review it soon.',
+    feedbackError: '❌ *Error sending feedback*\n\nSorry, there was an error sending your feedback. Please try again later.',
+    feedbackCancel: '❌ *Feedback Cancelled*\n\nYou can send feedback anytime using the Feedback button.'
   },
   am: {
     welcome: '🕌 *እንኳን ደህና መጣህ*\n\nለማንኛውም ከተማ የሶላት ጊዜዎችን ያግኙ።\n\n*ፈጣን መጀመሪያ:*\n• ከታች ያሉትን አዝራሮች ይጠቀሙ\n• ወይም የከተማ ስም በቀጥታ ይላኩ\n• ለፈጣን መዳረሻ ከተማን ያስቀምጡ\n\n*ሁኔታ:*',
@@ -113,6 +119,7 @@ const translations = {
     btnToHijri: '🔁 ወደ ሂጅሪ',
     btnBackToMain: '⬅️ ወደ ዋናው ተመለስ',
     btnBackToTools: '⬅️ ወደ መሳሪያዎች ተመለስ',
+    btnFeedback: '💬 አስተያየት',
     
     selectLanguage: 'የሚመርጡትን ቋንቋ ይምረጡ:',
     currentLanguage: 'የአሁኑ ቋንቋ',
@@ -146,7 +153,12 @@ const translations = {
     days: 'ቀናት',
     invalidDateFormat: '❌ ትክክል ያልሆነ የቀን ቅርጸት። እባክዎ dd/mm/yyyy ቅርጸት ይጠቀሙ።\n\n*ምሳሌ:* 15/03/1990',
     dateInFuture: '❌ የተወለዱበት ቀን ወደፊት ሊሆን አይችልም። እባክዎ ትክክለኛ የተለመደ ቀን ያስገቡ።',
-    invalidDate: '❌ ትክክል ያልሆነ ቀን። እባክዎ ግቤትዎን ያረጋግጡ እና እንደገና ይሞክሩ።'
+    invalidDate: '❌ ትክክል ያልሆነ ቀን። እባክዎ ግቤትዎን ያረጋግጡ እና እንደገና ይሞክሩ።',
+    
+    feedbackPrompt: '💬 *አስተያየት ላክ*\n\nእባክዎ አስተያየትዎን፣ ሀሳቦችዎን ወይም ችግሮችን ያጋሩ። መልዕክትዎ ለቡድናችን ይላካል።\n\n*ማስታወሻ:* የተጠቃሚ ስምዎ እና የተጠቃሚ መለያዎ ከአስተያየትዎ ጋር ይካተታል።',
+    feedbackSent: '✅ *አስተያየት ተላከ!*\n\nአስተያየትዎን ስላጋሩ እናመሰግናለን። በቅርቡ እንገልጸዋለን።',
+    feedbackError: '❌ *አስተያየት በማስተላልፍ ላይ ስህተት*\n\nይቅርታ፣ አስተያየትዎን በማስተላልፍ ላይ ስህተት ተከስቷል። እባክዎ ቆይተው እንደገና ይሞክሩ።',
+    feedbackCancel: '❌ *አስተያየት ተሰርዟል*\n\nአስተያየት በማስተላልፍ አዝራር በመጠቀም በማንኛውም ጊዜ መላክ ይችላሉ።'
   },
   ar: {
     welcome: '🕌 *أهلاً وسهلاً*\n\nاحصل على أوقات الصلاة لأي مدينة.\n\n*بداية سريعة:*\n• استخدم الأزرار أدناه\n• أو أرسل اسم المدينة مباشرة\n• احفظ المدينة للوصول السريع\n\n*الحالة:*',
@@ -188,6 +200,7 @@ const translations = {
     btnToHijri: '🔁 إلى الهجري',
     btnBackToMain: '⬅️ العودة للرئيسية',
     btnBackToTools: '⬅️ العودة للأدوات',
+    btnFeedback: '💬 تعليقات',
     
     selectLanguage: 'اختر لغتك المفضلة:',
     currentLanguage: 'اللغة الحالية',
@@ -221,7 +234,12 @@ const translations = {
     days: 'أيام',
     invalidDateFormat: '❌ تنسيق تاريخ غير صحيح. يرجى استخدام تنسيق dd/mm/yyyy.\n\n*مثال:* 15/03/1990',
     dateInFuture: '❌ لا يمكن أن يكون تاريخ الميلاد في المستقبل. يرجى إدخال تاريخ صحيح من الماضي.',
-    invalidDate: '❌ تاريخ غير صحيح. يرجى التحقق من إدخالك والمحاولة مرة أخرى.'
+    invalidDate: '❌ تاريخ غير صحيح. يرجى التحقق من إدخالك والمحاولة مرة أخرى.',
+    
+    feedbackPrompt: '💬 *إرسال تعليقات*\n\nيرجى مشاركة تعليقاتك أو اقتراحاتك أو الإبلاغ عن أي مشاكل. سيتم إرسال رسالتك إلى فريقنا.\n\n*ملاحظة:* سيتم تضمين اسم المستخدم ومعرف المستخدم مع تعليقاتك.',
+    feedbackSent: '✅ *تم إرسال التعليقات!*\n\nشكراً لك على تعليقاتك. نقدر مدخلاتك وسنراجعها قريباً.',
+    feedbackError: '❌ *خطأ في إرسال التعليقات*\n\nعذراً، حدث خطأ في إرسال تعليقاتك. يرجى المحاولة مرة أخرى لاحقاً.',
+    feedbackCancel: '❌ *تم إلغاء التعليقات*\n\nيمكنك إرسال تعليقات في أي وقت باستخدام زر التعليقات.'
   }
 };
 

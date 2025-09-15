@@ -34,4 +34,8 @@ const config = {
   isProduction: process.env.NODE_ENV === 'production',
 };
 
-module.exports = config;
+// Export individual config values for easier access
+module.exports = {
+  ...config,
+  FEEDBACK_RECIPIENT: process.env.FEEDBACK_RECIPIENT, // Telegram user ID or username to receive feedback
+};

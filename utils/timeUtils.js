@@ -1,13 +1,10 @@
-// Convert time to 12-hour AM/PM format with timezone awareness
 function convertTo12Hour(timeInput, timezone = null) {
   if (!timeInput || typeof timeInput !== 'string') return timeInput;
   
   try {
-    // If it's an ISO timestamp (contains 'T' or 'Z'), parse it as a date
     if (timeInput.includes('T') || timeInput.includes('Z')) {
       const date = new Date(timeInput);
       if (!isNaN(date.getTime())) {
-        // Use provided timezone or fallback to user's timezone
         const options = { 
           hour: 'numeric', 
           minute: '2-digit', 
@@ -18,7 +15,6 @@ function convertTo12Hour(timeInput, timezone = null) {
       }
     }
     
-    // Fallback: handle 24-hour format strings (HH:MM)
     const [hours, minutes] = timeInput.split(':');
     const hour = parseInt(hours, 10);
     const minute = minutes || '00';
