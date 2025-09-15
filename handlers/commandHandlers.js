@@ -275,7 +275,7 @@ async function handleIslamicMonths(ctx, language) {
     for (let i = 1; i <= 12; i++) {
       const month = months[i.toString()];
       if (month) {
-        monthsList += `${month.number}. ${month.en} (${month.ar})\n`;
+        monthsList += `${month.number}. ${month.en} (${month.ar})\n\n`;
       }
     }
     
