@@ -5,8 +5,15 @@ const { handleTextMessage } = require('../handlers/textHandler');
 const { handleCallbackQuery } = require('../handlers/callbackHandler');
 const Calendar = require('telegram-inline-calendar');
 
+// Import dayjs and its English locale to fix the MODULE_NOT_FOUND error
+const dayjs = require('dayjs');
+require('dayjs/locale/en');
+
 function createBot() {
   const bot = new Telegraf(config.bot.token);
+  
+  // Set dayjs locale to English
+  dayjs.locale('en');
   
   // Create global calendar instance
   const calendar = new Calendar(bot, {
