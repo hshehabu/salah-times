@@ -10,6 +10,8 @@ const {
   handleQuickPhrases,
   handleToolsMenu,
   handleToHijri,
+  handleAgeCalculator,
+  handleBirthDateInput,
   handleIslamicMonths,
 } = require('./commandHandlers');
 
@@ -24,6 +26,7 @@ async function handleTextMessage(ctx) {
   let savedCity = await getUserCity(userId);
   let language = await getUserLanguage(userId);
   let waitingForCity = ctx.session.waitingForCity;
+  let waitingForBirthDate = ctx.session.waitingForBirthDate;
   
   if (savedCity === null) {
     savedCity = ctx.session.savedCity;
@@ -39,6 +42,10 @@ async function handleTextMessage(ctx) {
   
   if (waitingForCity) {
     return await handleCityInput(ctx, text, language);
+  }
+  
+  if (waitingForBirthDate) {
+    return await handleBirthDateInput(ctx, text, language);
   }
   
   // Handle Get Times button (supports all languages)
@@ -72,8 +79,13 @@ async function handleTextMessage(ctx) {
   }
   
   // Handle To Hijri button (all languages)
-  if (text === '📅 To Hijri' || text === '📅 ወደ ሂጅሪ' || text === '📅 إلى الهجري') {
+  if (text === '🔁 To Hijri' || text === '🔁 ወደ ሂጅሪ' || text === '🔁 إلى الهجري') {
     return await handleToHijri(ctx, language);
+  }
+  
+  // Handle Age Calculator button (all languages)
+  if (text === '🎂 Age Calculator' || text === '🎂 ዕድሜ ካልኩሌተር' || text === '🎂 حاسبة العمر') {
+    return await handleAgeCalculator(ctx, language);
   }
   
   // Handle Islamic Months button (all languages)

@@ -34,7 +34,7 @@ const translations = {
     btnHelp: '❓ Help',
     btnLanguage: '🌐 Language',
     btnTools: '🔧 Tools',
-    btnToHijri: '📅 To Hijri',
+    btnToHijri: '🔁 To Hijri',
     btnBackToMain: '⬅️ Back to Main',
     
     selectLanguage: 'Select your preferred language:',
@@ -48,7 +48,21 @@ const translations = {
     
     btnIslamicMonths: '📅 Islamic Months',
     islamicMonthsTitle: '📅 *Islamic Calendar Months*\n\n',
-    islamicMonthsList: 'Here are the 12 months of the Islamic calendar:'
+    islamicMonthsList: 'Here are the 12 months of the Islamic calendar:',
+    
+    // Age Calculator
+    btnAgeCalculator: '🎂 Age Calculator',
+    ageCalculatorPrompt: '🎂 *Age Calculator*\n\nPlease enter your birth date in the format:\n*dd/mm/yyyy*\n\n*Example:* 15/03/1990',
+    ageCalculationError: '❌ Error calculating age: {error}',
+    ageCalculationResult: '🎂 *Age Calculation*\n\n*Birth Date (Gregorian):* {birthGregorian}\n*Birth Date (Hijri):* {birthHijri}\n*Day of Week:* {birthDayOfWeek}\n\n*Current Date (Gregorian):* {currentGregorian}\n*Current Date (Hijri):* {currentHijri}\n\n*Age in Gregorian:* {gregorianAge}\n*Age in Hijri:* {hijriAge}\n\n{birthdayMessage}',
+    years: 'years',
+    months: 'months', 
+    days: 'days',
+    birthdayToday: '🎉 *Happy Birthday!* Today is your birthday!',
+    daysUntilBirthday: '🎂 *{days} days* until your next birthday!',
+    invalidDateFormat: '❌ Invalid date format. Please use dd/mm/yyyy format.\n\n*Example:* 15/03/1990',
+    dateInFuture: '❌ Birth date cannot be in the future. Please enter a valid past date.',
+    invalidDate: '❌ Invalid date. Please check your input and try again.'
   },
   am: {
     welcome: '🕌 *እንኳን ደህና መጣህ*\n\nለማንኛውም ከተማ የሶላት ጊዜዎችን ያግኙ።\n\n*ፈጣን መጀመሪያ:*\n• ከታች ያሉትን አዝራሮች ይጠቀሙ\n• ወይም የከተማ ስም በቀጥታ ይላኩ\n• ለፈጣን መዳረሻ ከተማን ያስቀምጡ\n\n*ሁኔታ:*',
@@ -85,7 +99,7 @@ const translations = {
     btnHelp: '❓ እገዛ',
     btnLanguage: '🌐 ቋንቋ',
     btnTools: '🔧 መሳሪያዎች',
-    btnToHijri: '📅 ወደ ሂጅሪ',
+    btnToHijri: '🔁 ወደ ሂጅሪ',
     btnBackToMain: '⬅️ ወደ ዋናው ተመለስ',
     
     selectLanguage: 'የሚመርጡትን ቋንቋ ይምረጡ:',
@@ -99,7 +113,21 @@ const translations = {
     
     btnIslamicMonths: '📅 የኢስላም ወራት',
     islamicMonthsTitle: '📅 *የኢስላም የቀን መቁጠሪያ ወራት*\n\n',
-    islamicMonthsList: 'እነዚህ የኢስላም የቀን መቁጠሪያ 12 ወራት ናቸው:'
+    islamicMonthsList: 'እነዚህ የኢስላም የቀን መቁጠሪያ 12 ወራት ናቸው:',
+    
+    // Age Calculator
+    btnAgeCalculator: '🎂 ዕድሜ ካልኩሌተር',
+    ageCalculatorPrompt: '🎂 *ዕድሜ ካልኩሌተር*\n\nእባክዎ የተወለዱበትን ቀን በዚህ ቅርጸት ያስገቡ:\n*dd/mm/yyyy*\n\n*ምሳሌ:* 15/03/1990',
+    ageCalculationError: '❌ ዕድሜ በማስላት ላይ ስህተት: {error}',
+    ageCalculationResult: '🎂 *ዕድሜ ስሌት*\n\n*የተወለዱበት ቀን (ግሪጎሪያን):* {birthGregorian}\n*የተወለዱበት ቀን (ሂጅሪ):* {birthHijri}\n*የሳምንት ቀን:* {birthDayOfWeek}\n\n*የአሁኑ ቀን (ግሪጎሪያን):* {currentGregorian}\n*የአሁኑ ቀን (ሂጅሪ):* {currentHijri}\n\n*ዕድሜ በግሪጎሪያን:* {gregorianAge}\n*ዕድሜ በሂጅሪ:* {hijriAge}\n\n{birthdayMessage}',
+    years: 'ዓመታት',
+    months: 'ወራት',
+    days: 'ቀናት',
+    birthdayToday: '🎉 *የልደት ቀን በጎ ይሁን!* ዛሬ የልደት ቀንዎ ነው!',
+    daysUntilBirthday: '🎂 *{days} ቀናት* እስከ ቀጣዩ የልደት ቀንዎ!',
+    invalidDateFormat: '❌ ትክክል ያልሆነ የቀን ቅርጸት። እባክዎ dd/mm/yyyy ቅርጸት ይጠቀሙ።\n\n*ምሳሌ:* 15/03/1990',
+    dateInFuture: '❌ የተወለዱበት ቀን ወደፊት ሊሆን አይችልም። እባክዎ ትክክለኛ የተለመደ ቀን ያስገቡ።',
+    invalidDate: '❌ ትክክል ያልሆነ ቀን። እባክዎ ግቤትዎን ያረጋግጡ እና እንደገና ይሞክሩ።'
   },
   ar: {
     welcome: '🕌 *أهلاً وسهلاً*\n\nاحصل على أوقات الصلاة لأي مدينة.\n\n*بداية سريعة:*\n• استخدم الأزرار أدناه\n• أو أرسل اسم المدينة مباشرة\n• احفظ المدينة للوصول السريع\n\n*الحالة:*',
@@ -136,7 +164,7 @@ const translations = {
     btnHelp: '❓ مساعدة',
     btnLanguage: '🌐 اللغة',
     btnTools: '🔧 أدوات',
-    btnToHijri: '📅 إلى الهجري',
+    btnToHijri: '🔁 إلى الهجري',
     btnBackToMain: '⬅️ العودة للرئيسية',
     
     selectLanguage: 'اختر لغتك المفضلة:',
@@ -150,7 +178,21 @@ const translations = {
     
     btnIslamicMonths: '📅 الأشهر الهجرية',
     islamicMonthsTitle: '📅 *أشهر التقويم الهجري*\n\n',
-    islamicMonthsList: 'إليك الـ 12 شهراً من التقويم الهجري:'
+    islamicMonthsList: 'إليك الـ 12 شهراً من التقويم الهجري:',
+    
+    // Age Calculator
+    btnAgeCalculator: '🎂 حاسبة العمر',
+    ageCalculatorPrompt: '🎂 *حاسبة العمر*\n\nيرجى إدخال تاريخ ميلادك بالتنسيق:\n*dd/mm/yyyy*\n\n*مثال:* 15/03/1990',
+    ageCalculationError: '❌ خطأ في حساب العمر: {error}',
+    ageCalculationResult: '🎂 *حساب العمر*\n\n*تاريخ الميلاد (ميلادي):* {birthGregorian}\n*تاريخ الميلاد (هجري):* {birthHijri}\n*يوم الأسبوع:* {birthDayOfWeek}\n\n*التاريخ الحالي (ميلادي):* {currentGregorian}\n*التاريخ الحالي (هجري):* {currentHijri}\n\n*العمر بالميلادي:* {gregorianAge}\n*العمر بالهجري:* {hijriAge}\n\n{birthdayMessage}',
+    years: 'سنوات',
+    months: 'أشهر',
+    days: 'أيام',
+    birthdayToday: '🎉 *عيد ميلاد سعيد!* اليوم هو عيد ميلادك!',
+    daysUntilBirthday: '🎂 *{days} أيام* حتى عيد ميلادك القادم!',
+    invalidDateFormat: '❌ تنسيق تاريخ غير صحيح. يرجى استخدام تنسيق dd/mm/yyyy.\n\n*مثال:* 15/03/1990',
+    dateInFuture: '❌ لا يمكن أن يكون تاريخ الميلاد في المستقبل. يرجى إدخال تاريخ صحيح من الماضي.',
+    invalidDate: '❌ تاريخ غير صحيح. يرجى التحقق من إدخالك والمحاولة مرة أخرى.'
   }
 };
 

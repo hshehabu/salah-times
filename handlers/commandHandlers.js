@@ -4,6 +4,7 @@ const { getUserCity, getUserLanguage, saveUserCity, saveUserLanguage } = require
 const { fetchPrayerTimes, formatPrayerTimes, handleError } = require('../services/prayerTimesService');
 const { createLanguageKeyboard, getLanguageInfo } = require('../utils/languageUtils');
 const { convertGregorianToHijri, formatDateConversion } = require('../services/hijriConversionService');
+const { calculateAge, formatAgeCalculation } = require('../services/ageCalculatorService');
 const Calendar = require('telegram-inline-calendar');
 
 // Global calendar instance - will be initialized in bot setup
@@ -197,6 +198,7 @@ async function handleToolsMenu(ctx, language) {
   
   const keyboard = Markup.keyboard([
     [t('btnToHijri', language)],
+    [t('btnAgeCalculator', language)],
     [t('btnIslamicMonths', language)],
     [t('btnBackToMain', language)]
   ]).resize();
@@ -228,6 +230,41 @@ async function handleDateSelection(ctx, selectedDate, language) {
     return ctx.replyWithMarkdown(formattedMessage);
   } catch (error) {
     ctx.session.waitingForDate = false;
+    await handleError(ctx, error);
+  }
+}
+
+async function handleAgeCalculator(ctx, language) {
+  // Set session state for age calculator input
+  ctx.session.waitingForBirthDate = true;
+  
+  const message = t('ageCalculatorPrompt', language);
+  
+  const keyboard = Markup.keyboard([
+    [t('btnBackToMain', language)]
+  ]).resize();
+  
+  return ctx.replyWithMarkdown(message, keyboard);
+}
+
+async function handleBirthDateInput(ctx, birthDateString, language) {
+  try {
+    await ctx.sendChatAction('typing');
+    
+    const ageData = await calculateAge(birthDateString, language);
+    const formattedMessage = formatAgeCalculation(ageData, language);
+    
+    // Clear session state
+    ctx.session.waitingForBirthDate = false;
+    
+    const keyboard = Markup.keyboard([
+      [t('btnAgeCalculator', language)],
+      [t('btnBackToMain', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(formattedMessage, keyboard);
+  } catch (error) {
+    ctx.session.waitingForBirthDate = false;
     await handleError(ctx, error);
   }
 }
@@ -274,6 +311,8 @@ module.exports = {
   handleToolsMenu,
   handleToHijri,
   handleDateSelection,
+  handleAgeCalculator,
+  handleBirthDateInput,
   handleIslamicMonths,
   setGlobalCalendar,
   getGlobalCalendar,
