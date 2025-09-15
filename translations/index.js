@@ -1,6 +1,6 @@
 const translations = {
   en: {
-    welcome: '🕌 *Assalamu Alaikum!*\n\nWelcome to your personal prayer times companion! 🌟\n\n✨ *What you can do:*\n• Get accurate prayer times for any city\n• Convert dates to Hijri calendar\n• Calculate your age in both calendars\n• Access Islamic months information\n\n🚀 *Getting started is easy:*\n• Tap "Prayer Times" to begin\n• Or use "Other Tools" for more features\n• Your settings are saved automatically\n\n*Your current status:*',
+    welcome: '🕌 *Assalamu Alaikum!*\n\nGet prayer times and Islamic tools.\n\n*Features:*\n• Prayer times for any city\n• Date conversion to Hijri\n• Age calculator\n• Islamic months\n\n*Quick start:*\n• Use buttons below\n• Settings save automatically\n\nThe best is yet to come!\n\n*Status:*',
     noCitySaved: 'No city saved',
     citySaved: 'City saved!',
     yourDefaultCity: 'Your default city is now:',
@@ -80,7 +80,7 @@ const translations = {
     feedbackCancel: '❌ *Feedback Cancelled*\n\nYou can send feedback anytime using the Feedback button.'
   },
   am: {
-    welcome: '🕌 *እንኳን ደህና መጡ!*\n\nየሶላት ጊዜዎች ባለሞያ ቦት ውስጥ እንኳን በደህና መጡ! 🌟\n\n✨ *ምን ማድረግ ትችላለህ:*\n• ለማንኛውም ከተማ ትክክለኛ የሶላት ጊዜዎች ማግኘት\n• ቀናትን ወደ ሂጅሪ ቀን መቁጠሪያ መቀየር\n• ዕድሜዎን በሁለቱም ቀን መቁጠሪያዎች ማስላት\n• የኢስላም ወራት መረጃ መዳረሻ\n\n🚀 *መጀመር ቀላል ነው:*\n• "የሶላት ጊዜዎች" ን ተመታ ለመጀመር\n• ወይም "ሌሎች መሳሪያዎች" ን ለተጨማሪ ባህሪያት\n• ቅንብሮችዎ በራስ-ሰር ይቀመጣሉ\n\n*የአሁኑ ሁኔታዎ:*',
+    welcome: '🕌 *አሰላሙ አለይኩም!*\n\nየሶላት ጊዜዎች እና የኢስላም መሳሪያዎች ያግኙ።\n\n*ባህሪያት:*\n• ለማንኛውም ከተማ የሶላት ጊዜዎች\n• ቀን ወደ ሂጅሪ መቀየር\n• ዕድሜ ካልኩሌተር\n• የኢስላም ወራት\n\n*ፈጣን መጀመሪያ:*\n• ከታች ያሉትን አዝራሮች ይጠቀሙ\n• ቅንብሮች በራስ-ሰር ይቀመጣሉ\n\nምርጥው አሁንም አልመጣም!\n\n*ሁኔታ:*',
     noCitySaved: 'ምንም ከተማ አልተቀመጠም',
     citySaved: 'ከተማ ተቀምጧል!',
     yourDefaultCity: 'የእርስዎ ነባሪ ከተማ አሁን:',
@@ -161,7 +161,7 @@ const translations = {
     feedbackCancel: '❌ *አስተያየት ተሰርዟል*\n\nአስተያየት በማስተላልፍ አዝራር በመጠቀም በማንኛውም ጊዜ መላክ ይችላሉ።'
   },
   ar: {
-    welcome: '🕌 *أهلاً وسهلاً!*\n\nمرحباً بك في رفيق أوقات الصلاة الشخصي! 🌟\n\n✨ *ما يمكنك فعله:*\n• الحصول على أوقات صلاة دقيقة لأي مدينة\n• تحويل التواريخ إلى التقويم الهجري\n• حساب عمرك في كلا التقويمين\n• الوصول لمعلومات الأشهر الإسلامية\n\n🚀 *البداية سهلة جداً:*\n• اضغط "أوقات الصلاة" للبدء\n• أو استخدم "أدوات أخرى" للمزيد من الميزات\n• إعداداتك تُحفظ تلقائياً\n\n*حالتك الحالية:*',
+    welcome: '🕌 *السلام عليكم!*\n\nاحصل على أوقات الصلاة والأدوات الإسلامية.\n\n*الميزات:*\n• أوقات الصلاة لأي مدينة\n• تحويل التواريخ إلى الهجري\n• حاسبة العمر\n• الأشهر الإسلامية\n\n*بداية سريعة:*\n• استخدم الأزرار أدناه\n• الإعدادات تُحفظ تلقائياً\n\nالأفضل لم يأت بعد!\n\n*الحالة:*',
     noCitySaved: 'لم يتم حفظ أي مدينة',
     citySaved: 'تم حفظ المدينة!',
     yourDefaultCity: 'مدينتك الافتراضية الآن:',
