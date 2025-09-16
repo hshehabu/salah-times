@@ -15,6 +15,7 @@ const {
   handleIslamicMonths,
   handleRamadanCountdown,
   handleNearbyMasjids,
+  handleLocationInput,
   handleFeedback,
   handleFeedbackInput,
   handleReminder,
@@ -34,6 +35,7 @@ async function handleTextMessage(ctx) {
   let waitingForCity = ctx.session.waitingForCity;
   let waitingForBirthDate = ctx.session.waitingForBirthDate;
   let waitingForFeedback = ctx.session.waitingForFeedback;
+  let waitingForLocation = ctx.session.waitingForLocation;
   
   if (savedCity === null) {
     savedCity = ctx.session.savedCity;
@@ -56,6 +58,11 @@ async function handleTextMessage(ctx) {
   
   if (waitingForFeedback) {
     return await handleFeedbackInput(ctx, text, language);
+  }
+  
+  if (waitingForLocation) {
+    // If user sends text instead of location, show error
+    return ctx.reply(t('pleaseShareLocation', language) || 'Please share your location to find nearby masjids.');
   }
   
   if (text.startsWith('🕌 Get Times for ') || text.startsWith('🕌 ጊዜዎች አግኝ ለ ') || text.startsWith('🕌 احصل على الأوقات لـ ')) {
@@ -168,6 +175,25 @@ async function handleTextMessage(ctx) {
   return await handleGetTimes(ctx, text, language);
 }
 
+async function handleLocationMessage(ctx) {
+  const userId = ctx.from.id;
+  let language = await getUserLanguage(userId);
+  
+  if (language === 'en' && !ctx.session.language) {
+    language = ctx.session.language || 'en';
+  }
+  
+  // Check if user is waiting for location
+  if (ctx.session.waitingForLocation) {
+    const location = ctx.message.location;
+    return await handleLocationInput(ctx, location, language);
+  }
+  
+  // If not waiting for location, show general message
+  return ctx.reply(t('locationReceived', language) || 'Location received. Use the Nearby Masjids feature to find masjids near you.');
+}
+
 module.exports = {
   handleTextMessage,
+  handleLocationMessage,
 };

@@ -1,7 +1,7 @@
 const { Telegraf, session } = require('telegraf');
 const config = require('../config');
 const { handleStart, handleHelp, setGlobalCalendar } = require('../handlers/commandHandlers');
-const { handleTextMessage } = require('../handlers/textHandler');
+const { handleTextMessage, handleLocationMessage } = require('../handlers/textHandler');
 const { handleCallbackQuery } = require('../handlers/callbackHandler');
 const Calendar = require('telegram-inline-calendar');
 
@@ -28,6 +28,8 @@ function createBot() {
   bot.help(handleHelp);
   
   bot.on('text', handleTextMessage);
+  
+  bot.on('location', handleLocationMessage);
   
   bot.on('callback_query', handleCallbackQuery);
   

@@ -6,6 +6,7 @@ const { createLanguageKeyboard, getLanguageInfo } = require('../utils/languageUt
 const { convertGregorianToHijri, formatDateConversion } = require('../services/hijriConversionService');
 const { calculateAge, formatAgeCalculation } = require('../services/ageCalculatorService');
 const { formatRamadanCountdown } = require('../services/ramadanCountdownService');
+const { findNearbyMasjids } = require('../services/nearbyMasjidsService');
 const Calendar = require('telegram-inline-calendar');
 
 // Global calendar instance - will be initialized in bot setup
@@ -307,7 +308,10 @@ async function handleNearbyMasjids(ctx, language) {
   try {
     await ctx.sendChatAction('typing');
     
-    const message = t('nearbyMasjidsUnderDevelopment', language);
+    // Set session to wait for location
+    ctx.session.waitingForLocation = true;
+    
+    const message = t('nearbyMasjidsPrompt', language);
     
     const keyboard = Markup.keyboard([
       [t('btnBackToPrayerTimes', language)]
@@ -315,6 +319,31 @@ async function handleNearbyMasjids(ctx, language) {
     
     return ctx.replyWithMarkdown(message, keyboard);
   } catch (error) {
+    await handleError(ctx, error);
+  }
+}
+
+async function handleLocationInput(ctx, location, language) {
+  try {
+    await ctx.sendChatAction('typing');
+    
+    // Clear waiting state
+    ctx.session.waitingForLocation = false;
+    
+    const { latitude, longitude } = location;
+    
+    // Find nearby masjids
+    const result = await findNearbyMasjids(latitude, longitude, language);
+    
+    const keyboard = Markup.keyboard([
+      [t('btnNearbyMasjids', language)],
+      [t('btnBackToPrayerTimes', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(result.message, keyboard);
+    
+  } catch (error) {
+    ctx.session.waitingForLocation = false;
     await handleError(ctx, error);
   }
 }
@@ -452,6 +481,7 @@ module.exports = {
   handleIslamicMonths,
   handleRamadanCountdown,
   handleNearbyMasjids,
+  handleLocationInput,
   handleFeedback,
   handleFeedbackInput,
   handleReminder,

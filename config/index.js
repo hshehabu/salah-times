@@ -19,6 +19,13 @@ const config = {
     iso8601: true,
   },
 
+  // Google Places API Configuration
+  googlePlaces: {
+    apiKey: process.env.GOOGLE_PLACES_API_KEY,
+    baseUrl: 'https://maps.googleapis.com/maps/api/place',
+    searchRadius: 3000, // 3km in meters
+  },
+
   // Session Configuration
   session: {
     defaultSession: () => ({
