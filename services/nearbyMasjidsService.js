@@ -23,39 +23,19 @@ function generateSpecificMapsUrl(latitude, longitude, searchTerm) {
 }
 
 /**
- * Create top 5 masjid search options from single masjid search
+ * Create single masjid search link
  * @param {number} latitude - User's latitude
  * @param {number} longitude - User's longitude
  * @param {string} language - Language code
- * @returns {Array} Array of top 5 masjid search options
+ * @returns {Object} Single masjid search link with label and URL
  */
-function createTop5MasjidOptions(latitude, longitude, language = 'en') {
-  const baseUrl = generateGoogleMapsUrl(latitude, longitude);
+function createMasjidSearchLink(latitude, longitude, language = 'en') {
+  const url = generateGoogleMapsUrl(latitude, longitude);
   
-  const searchOptions = [
-    {
-      label: t('masjid1', language) || '🕌 Masjid 1',
-      url: baseUrl
-    },
-    {
-      label: t('masjid2', language) || '🕌 Masjid 2',
-      url: baseUrl
-    },
-    {
-      label: t('masjid3', language) || '🕌 Masjid 3',
-      url: baseUrl
-    },
-    {
-      label: t('masjid4', language) || '🕌 Masjid 4',
-      url: baseUrl
-    },
-    {
-      label: t('masjid5', language) || '🕌 Masjid 5',
-      url: baseUrl
-    }
-  ];
-
-  return searchOptions;
+  return {
+    label: t('viewNearbyMasjids', language) || '🕌 View Nearby Masjids',
+    url: url
+  };
 }
 
 /**
@@ -63,11 +43,10 @@ function createTop5MasjidOptions(latitude, longitude, language = 'en') {
  * @param {number} latitude - User's latitude
  * @param {number} longitude - User's longitude
  * @param {string} language - Language code
- * @returns {Object} Result object with success status, message, and top 5 masjid options
+ * @returns {Object} Result object with success status, message, and masjid search link
  */
 async function findNearbyMasjids(latitude, longitude, language = 'en') {
   try {
-    // Validate coordinates
     if (!latitude || !longitude || 
         latitude < -90 || latitude > 90 || 
         longitude < -180 || longitude > 180) {
@@ -77,18 +56,15 @@ async function findNearbyMasjids(latitude, longitude, language = 'en') {
       };
     }
 
-    // Create top 5 masjid search options
-    const masjidOptions = createTop5MasjidOptions(latitude, longitude, language);
+    const masjidLink = createMasjidSearchLink(latitude, longitude, language);
     
-    // Create the main message
     const message = t('nearbyMasjidsFound', language) + '\n\n' +
-                   t('top5Masjids', language);
+                   t('clickToViewMasjids', language);
 
     return {
       success: true,
       message: message,
-      masjidOptions: masjidOptions,
-      mainUrl: generateGoogleMapsUrl(latitude, longitude)
+      masjidLink: masjidLink
     };
 
   } catch (error) {
@@ -104,5 +80,5 @@ module.exports = {
   findNearbyMasjids,
   generateGoogleMapsUrl,
   generateSpecificMapsUrl,
-  createTop5MasjidOptions
+  createMasjidSearchLink
 };

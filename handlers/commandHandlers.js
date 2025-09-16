@@ -327,12 +327,10 @@ async function handleLocationInput(ctx, location, language) {
   try {
     await ctx.sendChatAction('typing');
     
-    // Clear waiting state
     ctx.session.waitingForLocation = false;
     
     const { latitude, longitude } = location;
     
-    // Find nearby masjids
     const result = await findNearbyMasjids(latitude, longitude, language);
     
     if (!result.success) {
@@ -344,17 +342,10 @@ async function handleLocationInput(ctx, location, language) {
       return ctx.replyWithMarkdown(result.message, keyboard);
     }
     
-    // Create inline keyboard with clickable buttons for each masjid option
-    const inlineKeyboard = result.masjidOptions.map(option => [
-      Markup.button.url(option.label, option.url)
+    const keyboard = Markup.inlineKeyboard([
+      [Markup.button.url(result.masjidLink.label, result.masjidLink.url)],
+      [Markup.button.callback(t('btnBackToPrayerTimes', language), 'prayer_times_menu')]
     ]);
-    
-    // Add back button
-    inlineKeyboard.push([
-      Markup.button.callback(t('btnBackToPrayerTimes', language), 'prayer_times_menu')
-    ]);
-    
-    const keyboard = Markup.inlineKeyboard(inlineKeyboard);
     
     return ctx.replyWithMarkdown(result.message, keyboard);
     
