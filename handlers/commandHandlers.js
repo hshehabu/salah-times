@@ -177,10 +177,12 @@ async function handlePrayerTimesMenu(ctx, language) {
     ? Markup.keyboard([
         [`${t('btnGetTimes', language)} ${savedCity}`],
         [t('btnChangeCity', language), t('btnReminder', language)],
+        [t('btnNearbyMasjids', language)],
         [t('btnBackToMain', language)]
       ]).resize()
     : Markup.keyboard([
         [t('btnSetCity', language)],
+        [t('btnNearbyMasjids', language)],
         [t('btnBackToMain', language)]
       ]).resize();
   
@@ -296,6 +298,22 @@ async function handleRamadanCountdown(ctx, language) {
     ]).resize();
     
     return ctx.replyWithMarkdown(countdownMessage, keyboard);
+  } catch (error) {
+    await handleError(ctx, error);
+  }
+}
+
+async function handleNearbyMasjids(ctx, language) {
+  try {
+    await ctx.sendChatAction('typing');
+    
+    const message = t('nearbyMasjidsUnderDevelopment', language);
+    
+    const keyboard = Markup.keyboard([
+      [t('btnBackToPrayerTimes', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
   } catch (error) {
     await handleError(ctx, error);
   }
@@ -433,6 +451,7 @@ module.exports = {
   handleBirthDateInput,
   handleIslamicMonths,
   handleRamadanCountdown,
+  handleNearbyMasjids,
   handleFeedback,
   handleFeedbackInput,
   handleReminder,

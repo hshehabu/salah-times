@@ -14,6 +14,7 @@ const {
   handleBirthDateInput,
   handleIslamicMonths,
   handleRamadanCountdown,
+  handleNearbyMasjids,
   handleFeedback,
   handleFeedbackInput,
   handleReminder,
@@ -97,6 +98,10 @@ async function handleTextMessage(ctx) {
   
   if (text === '🌙 Ramadan Countdown' || text === '🌙 ረመዳን ቆጠራ' || text === '🌙 العد التنازلي لرمضان') {
     return await handleRamadanCountdown(ctx, language);
+  }
+  
+  if (text === '🕌 Nearby Masjids' || text === '🕌 ቅርብ መስጂዶች' || text === '🕌 المساجد القريبة') {
+    return await handleNearbyMasjids(ctx, language);
   }
   
   if (text === '💬 Feedback' || text === '💬 አስተያየት' || text === '💬 تعليقات') {

@@ -90,6 +90,10 @@ const translations = {
     btnDisableReminder: '❌ Disable Reminder',
     dailyReminder: 'Daily Prayer Times',
     
+    btnNearbyMasjids: '🕌 Nearby Masjids',
+    nearbyMasjidsPrompt: '🕌 *Nearby Masjids*\n\nPlease share your location to find nearby masjids.\n\n*How to share location:*\n• Tap the 📎 attachment button\n• Select "Location"\n• Choose "Send My Current Location"',
+    nearbyMasjidsUnderDevelopment: '🕌 *Nearby Masjids*\n\n🚧 *This feature is under development*\n\nWe are working on bringing you a comprehensive list of nearby masjids with:\n• Prayer times\n• Contact information\n• Directions\n• Reviews and ratings\n\n*Coming soon!* Stay tuned for updates.',
+    
     btnRamadanCountdown: '🌙 Ramadan Countdown',
     ramadanCountdown: '🌙 *Ramadan Countdown*\n\n{dots}\n\n*{days} days* remaining until Ramadan\n\n*Next Ramadan:* {date}',
     ramadanToday: '🌙 *Ramadan Starts Today!*\n\n🎉 *Ramadan Mubarak!*\n\nMay this blessed month bring you peace, happiness, and spiritual growth.',
@@ -188,6 +192,10 @@ const translations = {
     btnDisableReminder: '❌ ማስታወሻ አሰርዝ',
     dailyReminder: 'ዕለታዊ የሶላት ጊዜዎች',
     
+    btnNearbyMasjids: '🕌 ቅርብ መስጂዶች',
+    nearbyMasjidsPrompt: '🕌 *ቅርብ መስጂዶች*\n\nቅርብ ያሉ መስጂዶችን ለማግኘት እባክዎ አካባቢዎን ያጋሩ።\n\n*አካባቢ እንዴት እንደሚጋራ:*\n• 📎 አባሪ አዝራርን ይንኩ\n• "አካባቢ" ይምረጡ\n• "የአሁኑን አካባቢዬን ላክ" ይምረጡ',
+    nearbyMasjidsUnderDevelopment: '🕌 *ቅርብ መስጂዶች*\n\n🚧 *ይህ ባህሪ በማዳበር ላይ ነው*\n\nለእርስዎ የሚከተሉትን የያዘ የቅርብ መስጂዶች ዝርዝር እያመጣን ነው:\n• የሶላት ጊዜዎች\n• የግንኙነት መረጃ\n• አቅጣጫዎች\n• አስተያየቶች እና ደረጃዎች\n\n*በቅርቡ ይመጣል!* ለማዘመን ይጠብቁ።',
+    
     btnRamadanCountdown: '🌙 ረመዳን ቆጠራ',
     ramadanCountdown: '🌙 *ረመዳን ቆጠራ*\n\n{dots}\n\n*{days} ቀናት* ረመዳን እስኪመጣ ይቀራሉ\n\n*ቀጣይ ረመዳን:* {date}',
     ramadanToday: '🌙 *ረመዳን ዛሬ ይጀምራል!*\n\n🎉 *ረመዳን ሙባረክ!*\n\nይህ ቡሩክ ወር ሰላም፣ ደስታ እና መንፈሳዊ እድገት ያመጣል።',
@@ -285,6 +293,10 @@ const translations = {
     btnEnableReminder: '✅ تفعيل التذكير',
     btnDisableReminder: '❌ إلغاء التذكير',
     dailyReminder: 'أوقات الصلاة اليومية',
+    
+    btnNearbyMasjids: '🕌 المساجد القريبة',
+    nearbyMasjidsPrompt: '🕌 *المساجد القريبة*\n\nيرجى مشاركة موقعك للعثور على المساجد القريبة.\n\n*كيفية مشاركة الموقع:*\n• اضغط على زر المرفقات 📎\n• اختر "الموقع"\n• اختر "إرسال موقعي الحالي"',
+    nearbyMasjidsUnderDevelopment: '🕌 *المساجد القريبة*\n\n🚧 *هذه الميزة قيد التطوير*\n\nنعمل على إحضار قائمة شاملة بالمساجد القريبة تتضمن:\n• أوقات الصلاة\n• معلومات الاتصال\n• الاتجاهات\n• المراجعات والتقييمات\n\n*قريباً!* ترقبوا التحديثات.',
     
     btnRamadanCountdown: '🌙 العد التنازلي لرمضان',
     ramadanCountdown: '🌙 *العد التنازلي لرمضان*\n\n{dots}\n\n*{days} أيام* متبقية حتى رمضان\n\n*رمضان القادم:* {date}',
