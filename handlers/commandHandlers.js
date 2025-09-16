@@ -335,10 +335,26 @@ async function handleLocationInput(ctx, location, language) {
     // Find nearby masjids
     const result = await findNearbyMasjids(latitude, longitude, language);
     
-    const keyboard = Markup.keyboard([
-      [t('btnNearbyMasjids', language)],
-      [t('btnBackToPrayerTimes', language)]
-    ]).resize();
+    if (!result.success) {
+      const keyboard = Markup.keyboard([
+        [t('btnNearbyMasjids', language)],
+        [t('btnBackToPrayerTimes', language)]
+      ]).resize();
+      
+      return ctx.replyWithMarkdown(result.message, keyboard);
+    }
+    
+    // Create inline keyboard with clickable buttons for each masjid option
+    const inlineKeyboard = result.masjidOptions.map(option => [
+      Markup.button.url(option.label, option.url)
+    ]);
+    
+    // Add back button
+    inlineKeyboard.push([
+      Markup.button.callback(t('btnBackToPrayerTimes', language), 'prayer_times_menu')
+    ]);
+    
+    const keyboard = Markup.inlineKeyboard(inlineKeyboard);
     
     return ctx.replyWithMarkdown(result.message, keyboard);
     
