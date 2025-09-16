@@ -13,6 +13,7 @@ const {
   handleAgeCalculator,
   handleBirthDateInput,
   handleIslamicMonths,
+  handleRamadanCountdown,
   handleFeedback,
   handleFeedbackInput,
   handleReminder,
@@ -92,6 +93,10 @@ async function handleTextMessage(ctx) {
   
   if (text === '📅 Islamic Months' || text === '📅 የኢስላም ወራት' || text === '📅 الأشهر الهجرية') {
     return await handleIslamicMonths(ctx, language);
+  }
+  
+  if (text === '🌙 Ramadan Countdown' || text === '🌙 ረመዳን ቆጠራ' || text === '🌙 العد التنازلي لرمضان') {
+    return await handleRamadanCountdown(ctx, language);
   }
   
   if (text === '💬 Feedback' || text === '💬 አስተያየት' || text === '💬 تعليقات') {

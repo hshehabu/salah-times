@@ -5,6 +5,7 @@ const { fetchPrayerTimes, formatPrayerTimes, handleError } = require('../service
 const { createLanguageKeyboard, getLanguageInfo } = require('../utils/languageUtils');
 const { convertGregorianToHijri, formatDateConversion } = require('../services/hijriConversionService');
 const { calculateAge, formatAgeCalculation } = require('../services/ageCalculatorService');
+const { formatRamadanCountdown } = require('../services/ramadanCountdownService');
 const Calendar = require('telegram-inline-calendar');
 
 // Global calendar instance - will be initialized in bot setup
@@ -191,7 +192,7 @@ async function handleOtherToolsMenu(ctx, language) {
   
   const keyboard = Markup.keyboard([
     [t('btnToHijri', language), t('btnAgeCalculator', language)],
-    [t('btnIslamicMonths', language)],
+    [t('btnIslamicMonths', language), t('btnRamadanCountdown', language)],
     [t('btnBackToMain', language)]
   ]).resize();
   
@@ -279,6 +280,22 @@ async function handleIslamicMonths(ctx, language) {
     ]).resize();
     
     return ctx.replyWithMarkdown(message, keyboard);
+  } catch (error) {
+    await handleError(ctx, error);
+  }
+}
+
+async function handleRamadanCountdown(ctx, language) {
+  try {
+    await ctx.sendChatAction('typing');
+    
+    const countdownMessage = formatRamadanCountdown(language);
+    
+    const keyboard = Markup.keyboard([
+      [t('btnBackToTools', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(countdownMessage, keyboard);
   } catch (error) {
     await handleError(ctx, error);
   }
@@ -415,6 +432,7 @@ module.exports = {
   handleAgeCalculator,
   handleBirthDateInput,
   handleIslamicMonths,
+  handleRamadanCountdown,
   handleFeedback,
   handleFeedbackInput,
   handleReminder,
