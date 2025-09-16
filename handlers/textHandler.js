@@ -44,6 +44,36 @@ async function handleTextMessage(ctx) {
     language = ctx.session.language || 'en';
   }
   
+  if (text === '⬅️ Back to Main' || text === '⬅️ ወደ ዋናው ተመለስ' || text === '⬅️ العودة للرئيسية') {
+    // Clear all waiting states
+    ctx.session.waitingForCity = false;
+    ctx.session.waitingForBirthDate = false;
+    ctx.session.waitingForFeedback = false;
+    ctx.session.waitingForLocation = false;
+    ctx.session.currentMenu = null;
+    return await handleStart(ctx);
+  }
+  
+  if (text === '⬅️ Back to Prayer Times' || text === '⬅️ ወደ ሶላት ጊዜዎች ተመለስ' || text === '⬅️ العودة لأوقات الصلاة') {
+    // Clear all waiting states
+    ctx.session.waitingForCity = false;
+    ctx.session.waitingForBirthDate = false;
+    ctx.session.waitingForFeedback = false;
+    ctx.session.waitingForLocation = false;
+    ctx.session.currentMenu = null;
+    return await handlePrayerTimesMenu(ctx, language);
+  }
+  
+  if (text === '⬅️ Back to Tools' || text === '⬅️ ወደ መሳሪያዎች ተመለስ' || text === '⬅️ العودة للأدوات') {
+    // Clear all waiting states
+    ctx.session.waitingForCity = false;
+    ctx.session.waitingForBirthDate = false;
+    ctx.session.waitingForFeedback = false;
+    ctx.session.waitingForLocation = false;
+    ctx.session.currentMenu = null;
+    return await handleOtherToolsMenu(ctx, language);
+  }
+
   if (text === '🌐 Language' || text === '🌐 ቋንቋ' || text === '🌐 اللغة') {
     return await handleLanguageSelection(ctx, language);
   }
@@ -122,36 +152,6 @@ async function handleTextMessage(ctx) {
   if (text === '✅ Enable Reminder' || text === '✅ ማስታወሻ አንቃ' || text === '✅ تفعيل التذكير' ||
       text === '❌ Disable Reminder' || text === '❌ ማስታወሻ አሰርዝ' || text === '❌ إلغاء التذكير') {
     return await handleToggleReminder(ctx, language);
-  }
-  
-  if (text === '⬅️ Back to Main' || text === '⬅️ ወደ ዋናው ተመለስ' || text === '⬅️ العودة للرئيسية') {
-    // Clear all waiting states
-    ctx.session.waitingForCity = false;
-    ctx.session.waitingForBirthDate = false;
-    ctx.session.waitingForFeedback = false;
-    ctx.session.waitingForLocation = false;
-    ctx.session.currentMenu = null;
-    return await handleStart(ctx);
-  }
-  
-  if (text === '⬅️ Back to Prayer Times' || text === '⬅️ ወደ ሶላት ጊዜዎች ተመለስ' || text === '⬅️ العودة لأوقات الصلاة') {
-    // Clear all waiting states
-    ctx.session.waitingForCity = false;
-    ctx.session.waitingForBirthDate = false;
-    ctx.session.waitingForFeedback = false;
-    ctx.session.waitingForLocation = false;
-    ctx.session.currentMenu = null;
-    return await handlePrayerTimesMenu(ctx, language);
-  }
-  
-  if (text === '⬅️ Back to Tools' || text === '⬅️ ወደ መሳሪያዎች ተመለስ' || text === '⬅️ العودة للأدوات') {
-    // Clear all waiting states
-    ctx.session.waitingForCity = false;
-    ctx.session.waitingForBirthDate = false;
-    ctx.session.waitingForFeedback = false;
-    ctx.session.waitingForLocation = false;
-    ctx.session.currentMenu = null;
-    return await handleOtherToolsMenu(ctx, language);
   }
   
   const quickPhrases = ['times', 'prayer times', 'salah', 'namaz', 'now', 'today', 
