@@ -343,8 +343,7 @@ async function handleLocationInput(ctx, location, language) {
     }
     
     const keyboard = Markup.inlineKeyboard([
-      [Markup.button.url(result.masjidLink.label, result.masjidLink.url)],
-      [Markup.button.callback(t('btnBackToPrayerTimes', language), 'prayer_times_menu')]
+      [Markup.button.url(result.masjidLink.label, result.masjidLink.url)]
     ]);
     
     return ctx.replyWithMarkdown(result.message, keyboard);

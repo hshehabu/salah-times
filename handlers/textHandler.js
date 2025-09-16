@@ -129,6 +129,7 @@ async function handleTextMessage(ctx) {
     ctx.session.waitingForCity = false;
     ctx.session.waitingForBirthDate = false;
     ctx.session.waitingForFeedback = false;
+    ctx.session.waitingForLocation = false;
     ctx.session.currentMenu = null;
     return await handleStart(ctx);
   }
@@ -138,6 +139,7 @@ async function handleTextMessage(ctx) {
     ctx.session.waitingForCity = false;
     ctx.session.waitingForBirthDate = false;
     ctx.session.waitingForFeedback = false;
+    ctx.session.waitingForLocation = false;
     ctx.session.currentMenu = null;
     return await handlePrayerTimesMenu(ctx, language);
   }
@@ -147,6 +149,7 @@ async function handleTextMessage(ctx) {
     ctx.session.waitingForCity = false;
     ctx.session.waitingForBirthDate = false;
     ctx.session.waitingForFeedback = false;
+    ctx.session.waitingForLocation = false;
     ctx.session.currentMenu = null;
     return await handleOtherToolsMenu(ctx, language);
   }

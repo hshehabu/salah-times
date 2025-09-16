@@ -1,5 +1,5 @@
 const { getUserLanguage } = require('../database/supabase');
-const { handleLanguageChange, handleDateSelection, getGlobalCalendar } = require('./commandHandlers');
+const { handleLanguageChange, handleDateSelection, getGlobalCalendar, handlePrayerTimesMenu } = require('./commandHandlers');
 const { isValidLanguage } = require('../utils/languageUtils');
 
 async function handleCallbackQuery(ctx) {
@@ -38,6 +38,9 @@ async function handleCallbackQuery(ctx) {
     } else {
       await ctx.answerCbQuery('❌ Invalid language selection', { show_alert: true });
     }
+  } else if (callbackData === 'prayer_times_menu') {
+    await ctx.answerCbQuery();
+    await handlePrayerTimesMenu(ctx, language);
   } else {
     await ctx.answerCbQuery('❌ Unknown action', { show_alert: true });
   }
