@@ -14,6 +14,7 @@ const {
   handleBirthDateInput,
   handleIslamicMonths,
   handleRamadanCountdown,
+  handleZakahCalculator,
   handleNearbyMasjids,
   handleLocationInput,
   handleFeedback,
@@ -135,6 +136,10 @@ async function handleTextMessage(ctx) {
   
   if (text === '🌙 Ramadan Countdown' || text === '🌙 ረመዳን ቆጠራ' || text === '🌙 العد التنازلي لرمضان') {
     return await handleRamadanCountdown(ctx, language);
+  }
+  
+  if (text === '💰 Zakah Calculator' || text === '💰 ዘካ ካልኩሌተር' || text === '💰 حاسبة الزكاة') {
+    return await handleZakahCalculator(ctx, language);
   }
   
   if (text === '🕌 Nearby Masjids' || text === '🕌 ቅርብ መስጂዶች' || text === '🕌 المساجد القريبة') {

@@ -105,7 +105,11 @@ const translations = {
     ramadanCountdown: '🌙 *Ramadan Countdown*\n\n{dots}\n\n*{days} days* remaining until Ramadan\n\n*Next Ramadan:* {date}',
     ramadanToday: '🌙 *Ramadan Starts Today!*\n\n🎉 *Ramadan Mubarak!*\n\nMay this blessed month bring you peace, happiness, and spiritual growth.',
     ramadanStarted: '🌙 *Ramadan is Here!*\n\n🎉 *Ramadan Mubarak!*\n\nMay Allah accept your fasting and prayers.',
-    ramadanCountdownError: '❌ *Error*\n\nSorry, there was an error calculating the Ramadan countdown. Please try again later.'
+    ramadanCountdownError: '❌ *Error*\n\nSorry, there was an error calculating the Ramadan countdown. Please try again later.',
+    
+    btnZakahCalculator: '💰 Zakah Calculator',
+    zakahCalculatorUnderDevelopment: '💰 *Zakah Calculator*\n\n🚧 *This feature is under development*\n\n*Coming soon!* Stay tuned for updates.',
+    zakahInstructions: '💰 *Zakah Calculator Instructions*\n\n*What is Zakah?*\nZakah is one of the Five Pillars of Islam, a mandatory charitable contribution.\n\n*Coming soon!*'
   },
   am: {
     welcome: '🕌 *አሰላሙ አለይኩም!*\n\nየሶላት ጊዜዎች እና የኢስላም መሳሪያዎች ያግኙ።\n\n*ባህሪያት:*\n• ለማንኛውም ከተማ የሶላት ጊዜዎች\n• ቀን ወደ ሂጅሪ መቀየር\n• ዕድሜ ካልኩሌተር\n• የኢስላም ወራት\n\n*ፈጣን መጀመሪያ:*\n• ከታች ያሉትን አዝራሮች ይጠቀሙ\n• ቅንብሮች በራስ-ሰር ይቀመጣሉ\n\nምርጥው አሁንም አልመጣም!\n\n*ሁኔታ:*',
@@ -214,7 +218,11 @@ const translations = {
     ramadanCountdown: '🌙 *ረመዳን ቆጠራ*\n\n{dots}\n\n*{days} ቀናት* ረመዳን እስኪመጣ ይቀራሉ\n\n*ቀጣይ ረመዳን:* {date}',
     ramadanToday: '🌙 *ረመዳን ዛሬ ይጀምራል!*\n\n🎉 *ረመዳን ሙባረክ!*\n\nይህ ቡሩክ ወር ሰላም፣ ደስታ እና መንፈሳዊ እድገት ያመጣል።',
     ramadanStarted: '🌙 *ረመዳን እዚህ አለ!*\n\n🎉 *ረመዳን ሙባረክ!*\n\nአላህ የምጾትን እና የሶላትን ይቀበል።',
-    ramadanCountdownError: '❌ *ስህተት*\n\nይቅርታ፣ የረመዳን ቆጠራን በማስላት ላይ ስህተት ተከስቷል። እባክዎ ቆይተው እንደገና ይሞክሩ።'
+    ramadanCountdownError: '❌ *ስህተት*\n\nይቅርታ፣ የረመዳን ቆጠራን በማስላት ላይ ስህተት ተከስቷል። እባክዎ ቆይተው እንደገና ይሞክሩ።',
+    
+    btnZakahCalculator: '💰 ዘካ ካልኩሌተር',
+    zakahCalculatorUnderDevelopment: '💰 *ዘካ ካልኩሌተር*\n\n🚧 *ይህ ባህሪ በማዳበር ላይ ነው*\n\n*በቅርቡ ይመጣል!* ለማዘመን ይጠብቁ።',
+    zakahInstructions: '💰 *የዘካ ካልኩሌተር መመሪያዎች*\n\n*ዘካ ምንድን ነው?*\nዘካ ከኢስላም አምስት ዋና ዋና አምላክ አንዱ ነው፣ የግዴታ የመጸዳት አስተዋጽኦ።\n\n*በቅርቡ ይመጣል!*'
   },
   ar: {
     welcome: '🕌 *السلام عليكم!*\n\nاحصل على أوقات الصلاة والأدوات الإسلامية.\n\n*الميزات:*\n• أوقات الصلاة لأي مدينة\n• تحويل التواريخ إلى الهجري\n• حاسبة العمر\n• الأشهر الإسلامية\n\n*بداية سريعة:*\n• استخدم الأزرار أدناه\n• الإعدادات تُحفظ تلقائياً\n\nالأفضل لم يأت بعد!\n\n*الحالة:*',
@@ -323,7 +331,11 @@ const translations = {
     ramadanCountdown: '🌙 *العد التنازلي لرمضان*\n\n{dots}\n\n*{days} أيام* متبقية حتى رمضان\n\n*رمضان القادم:* {date}',
     ramadanToday: '🌙 *رمضان يبدأ اليوم!*\n\n🎉 *رمضان مبارك!*\n\nليجلب لك هذا الشهر المبارك السلام والسعادة والنمو الروحي.',
     ramadanStarted: '🌙 *رمضان هنا!*\n\n🎉 *رمضان مبارك!*\n\nتقبل الله صيامكم وصلاتكم.',
-    ramadanCountdownError: '❌ *خطأ*\n\nعذراً، حدث خطأ في حساب العد التنازلي لرمضان. يرجى المحاولة مرة أخرى لاحقاً.'
+    ramadanCountdownError: '❌ *خطأ*\n\nعذراً، حدث خطأ في حساب العد التنازلي لرمضان. يرجى المحاولة مرة أخرى لاحقاً.',
+    
+    btnZakahCalculator: '💰 حاسبة الزكاة',
+    zakahCalculatorUnderDevelopment: '💰 *حاسبة الزكاة*\n\n🚧 *هذه الميزة قيد التطوير*\n\n*قريباً!* ترقبوا التحديثات.',
+    zakahInstructions: '💰 *تعليمات حاسبة الزكاة*\n\n*ما هي الزكاة؟*\nالزكاة هي أحد أركان الإسلام الخمسة، وهي مساهمة خيرية إلزامية.\n\n*قريباً!*'
   }
 };
 
