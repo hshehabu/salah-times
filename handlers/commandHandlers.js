@@ -8,6 +8,8 @@ const { calculateAge, formatAgeCalculation } = require('../services/ageCalculato
 const { formatRamadanCountdown } = require('../services/ramadanCountdownService');
 const { findNearbyMasjids } = require('../services/nearbyMasjidsService');
 const { getZakahCalculatorMessage } = require('../services/zakahCalculatorService');
+const { calculateSchedule, formatScheduleMessage, validatePageRange, validateDaysPerWeek } = require('../services/quranSchedulerService');
+const { getUserQuranSchedule, saveUserQuranSchedule, getUserQuranReminder, saveUserQuranReminder, updateQuranScheduleProgress, pauseQuranSchedule, resumeQuranSchedule } = require('../database/supabase');
 const Calendar = require('telegram-inline-calendar');
 
 // Global calendar instance - will be initialized in bot setup
@@ -197,7 +199,7 @@ async function handleOtherToolsMenu(ctx, language) {
   const keyboard = Markup.keyboard([
     [t('btnToHijri', language), t('btnAgeCalculator', language)],
     [t('btnIslamicMonths', language), t('btnRamadanCountdown', language)],
-    [t('btnZakahCalculator', language)],
+    [t('btnZakahCalculator', language), t('btnQuranScheduler', language)],
     [t('btnBackToMain', language)]
   ]).resize();
   
@@ -487,6 +489,315 @@ async function handleToggleReminder(ctx, language) {
   }
 }
 
+async function handleQuranScheduler(ctx, language) {
+  try {
+    const userId = ctx.from.id;
+    const existingSchedule = await getUserQuranSchedule(userId);
+    
+    if (existingSchedule && !existingSchedule.paused) {
+      // Show existing schedule
+      const scheduleMessage = formatScheduleMessage(existingSchedule, language);
+      const reminderEnabled = await getUserQuranReminder(userId);
+      
+      const keyboard = Markup.keyboard([
+        [t('btnQuranViewSchedule', language), t('btnQuranMarkComplete', language)],
+        [reminderEnabled ? t('btnQuranDisableReminder', language) : t('btnQuranEnableReminder', language)],
+        [t('btnQuranPauseSchedule', language), t('btnQuranNewSchedule', language)],
+        [t('btnBackToTools', language)]
+      ]).resize();
+      
+      return ctx.replyWithMarkdown(scheduleMessage, keyboard);
+    } else if (existingSchedule && existingSchedule.paused) {
+      // Show paused schedule
+      const message = `${t('quranSchedulePaused', language)}\n\n${formatScheduleMessage(existingSchedule, language)}`;
+      
+      const keyboard = Markup.keyboard([
+        [t('btnQuranResumeSchedule', language), t('btnQuranNewSchedule', language)],
+        [t('btnBackToTools', language)]
+      ]).resize();
+      
+      return ctx.replyWithMarkdown(message, keyboard);
+    } else {
+      // Start new schedule
+      ctx.session.waitingForQuranPages = true;
+      const message = t('quranSchedulerPrompt', language);
+      
+      const keyboard = Markup.keyboard([
+        [t('btnBackToTools', language)]
+      ]).resize();
+      
+      return ctx.replyWithMarkdown(message, keyboard);
+    }
+  } catch (error) {
+    console.error('Error handling Quran scheduler:', error);
+    await handleError(ctx, error);
+  }
+}
+
+async function handleQuranPagesInput(ctx, text, language) {
+  try {
+    await ctx.sendChatAction('typing');
+    
+    const validation = validatePageRange(text);
+    
+    if (!validation.valid) {
+      return ctx.reply(t('quranInvalidPageFormat', language));
+    }
+    
+    ctx.session.quranStartPage = validation.startPage;
+    ctx.session.quranEndPage = validation.endPage;
+    ctx.session.waitingForQuranPages = false;
+    ctx.session.waitingForQuranDays = true;
+    
+    const message = t('quranDaysPerWeekPrompt', language)
+      .replace('{startPage}', validation.startPage)
+      .replace('{endPage}', validation.endPage)
+      .replace('{totalPages}', validation.endPage - validation.startPage + 1);
+    
+    const keyboard = Markup.keyboard([
+      [t('btnBackToTools', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
+  } catch (error) {
+    ctx.session.waitingForQuranPages = false;
+    await handleError(ctx, error);
+  }
+}
+
+async function handleQuranDaysInput(ctx, text, language) {
+  try {
+    await ctx.sendChatAction('typing');
+    
+    const validation = validateDaysPerWeek(text);
+    
+    if (!validation.valid) {
+      return ctx.reply(t('quranInvalidDaysFormat', language));
+    }
+    
+    const startPage = ctx.session.quranStartPage;
+    const endPage = ctx.session.quranEndPage;
+    const daysPerWeek = validation.days;
+    
+    const scheduleData = calculateSchedule(startPage, endPage, daysPerWeek, language);
+    
+    if (!scheduleData.success) {
+      ctx.session.waitingForQuranDays = false;
+      return ctx.reply(scheduleData.message);
+    }
+    
+    // Save schedule to database
+    const scheduleToSave = {
+      ...scheduleData,
+      reminderEnabled: false,
+      paused: false,
+      progress: {},
+      created_at: new Date().toISOString()
+    };
+    
+    await saveUserQuranSchedule(ctx.from.id, scheduleToSave);
+    
+    const scheduleMessage = formatScheduleMessage(scheduleData, language);
+    
+    ctx.session.waitingForQuranDays = false;
+    ctx.session.quranStartPage = null;
+    ctx.session.quranEndPage = null;
+    
+    const keyboard = Markup.keyboard([
+      [t('btnQuranEnableReminder', language), t('btnQuranViewSchedule', language)],
+      [t('btnQuranPauseSchedule', language), t('btnQuranNewSchedule', language)],
+      [t('btnBackToTools', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(scheduleMessage, keyboard);
+  } catch (error) {
+    ctx.session.waitingForQuranDays = false;
+    await handleError(ctx, error);
+  }
+}
+
+async function handleQuranViewSchedule(ctx, language) {
+  try {
+    const userId = ctx.from.id;
+    const schedule = await getUserQuranSchedule(userId);
+    
+    if (!schedule) {
+      return ctx.reply(t('quranNoSchedule', language));
+    }
+    
+    const scheduleMessage = formatScheduleMessage(schedule, language);
+    
+    // Add progress info if available
+    if (schedule.progress && Object.keys(schedule.progress).length > 0) {
+      let progressText = `\n\n📊 *${t('quranProgress', language)}:*\n`;
+      schedule.schedule.forEach((session, index) => {
+        const isCompleted = schedule.progress[index] === true;
+        progressText += `${index + 1}. ${session.dayName}: ${isCompleted ? '✅' : '⏳'}\n`;
+      });
+      scheduleMessage += progressText;
+    }
+    
+    const reminderEnabled = await getUserQuranReminder(userId);
+    
+    const keyboard = Markup.keyboard([
+      [t('btnQuranMarkComplete', language)],
+      [reminderEnabled ? t('btnQuranDisableReminder', language) : t('btnQuranEnableReminder', language)],
+      [schedule.paused ? t('btnQuranResumeSchedule', language) : t('btnQuranPauseSchedule', language)],
+      [t('btnBackToTools', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(scheduleMessage, keyboard);
+  } catch (error) {
+    await handleError(ctx, error);
+  }
+}
+
+async function handleQuranToggleReminder(ctx, language) {
+  try {
+    const userId = ctx.from.id;
+    const currentStatus = await getUserQuranReminder(userId);
+    const newStatus = !currentStatus;
+    
+    const success = await saveUserQuranReminder(userId, newStatus);
+    
+    if (!success) {
+      return ctx.reply(t('quranReminderError', language));
+    }
+    
+    const message = newStatus ? t('quranReminderEnabled', language) : t('quranReminderDisabled', language);
+    
+    const keyboard = Markup.keyboard([
+      [newStatus ? t('btnQuranDisableReminder', language) : t('btnQuranEnableReminder', language)],
+      [t('btnQuranViewSchedule', language)],
+      [t('btnBackToTools', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
+  } catch (error) {
+    console.error('Error toggling Quran reminder:', error);
+    return ctx.reply(t('quranReminderError', language));
+  }
+}
+
+async function handleQuranPauseSchedule(ctx, language) {
+  try {
+    const userId = ctx.from.id;
+    const success = await pauseQuranSchedule(userId);
+    
+    if (!success) {
+      return ctx.reply(t('quranPauseError', language));
+    }
+    
+    const message = t('quranSchedulePaused', language);
+    
+    const keyboard = Markup.keyboard([
+      [t('btnQuranResumeSchedule', language)],
+      [t('btnBackToTools', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
+  } catch (error) {
+    console.error('Error pausing Quran schedule:', error);
+    return ctx.reply(t('quranPauseError', language));
+  }
+}
+
+async function handleQuranResumeSchedule(ctx, language) {
+  try {
+    const userId = ctx.from.id;
+    const success = await resumeQuranSchedule(userId);
+    
+    if (!success) {
+      return ctx.reply(t('quranResumeError', language));
+    }
+    
+    const schedule = await getUserQuranSchedule(userId);
+    const scheduleMessage = formatScheduleMessage(schedule, language);
+    const message = `${t('quranScheduleResumed', language)}\n\n${scheduleMessage}`;
+    
+    const keyboard = Markup.keyboard([
+      [t('btnQuranViewSchedule', language)],
+      [t('btnBackToTools', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
+  } catch (error) {
+    console.error('Error resuming Quran schedule:', error);
+    return ctx.reply(t('quranResumeError', language));
+  }
+}
+
+async function handleQuranMarkComplete(ctx, language) {
+  try {
+    const userId = ctx.from.id;
+    const schedule = await getUserQuranSchedule(userId);
+    
+    if (!schedule || !schedule.schedule) {
+      return ctx.reply(t('quranNoSchedule', language));
+    }
+    
+    ctx.session.waitingForQuranSessionIndex = true;
+    
+    let message = `${t('quranMarkCompletePrompt', language)}\n\n`;
+    schedule.schedule.forEach((session, index) => {
+      const isCompleted = schedule.progress && schedule.progress[index] === true;
+      message += `${index + 1}. ${session.dayName} (${t('quranPagesRange', language).replace('{start}', session.startPage).replace('{end}', session.endPage).replace('{pages}', session.pages)}) ${isCompleted ? '✅' : ''}\n`;
+    });
+    
+    const keyboard = Markup.keyboard([
+      [t('btnBackToTools', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
+  } catch (error) {
+    await handleError(ctx, error);
+  }
+}
+
+async function handleQuranSessionIndexInput(ctx, text, language) {
+  try {
+    await ctx.sendChatAction('typing');
+    
+    const sessionIndex = parseInt(text.trim(), 10) - 1;
+    const userId = ctx.from.id;
+    const schedule = await getUserQuranSchedule(userId);
+    
+    if (!schedule || !schedule.schedule) {
+      ctx.session.waitingForQuranSessionIndex = false;
+      return ctx.reply(t('quranNoSchedule', language));
+    }
+    
+    if (isNaN(sessionIndex) || sessionIndex < 0 || sessionIndex >= schedule.schedule.length) {
+      return ctx.reply(t('quranInvalidSessionIndex', language));
+    }
+    
+    const isCompleted = schedule.progress && schedule.progress[sessionIndex] === true;
+    const newStatus = !isCompleted;
+    
+    await updateQuranScheduleProgress(userId, sessionIndex, newStatus);
+    
+    const session = schedule.schedule[sessionIndex];
+    const message = newStatus 
+      ? t('quranSessionMarkedComplete', language)
+        .replace('{day}', session.dayName)
+        .replace('{pages}', `${session.startPage}-${session.endPage}`)
+      : t('quranSessionMarkedIncomplete', language)
+        .replace('{day}', session.dayName);
+    
+    ctx.session.waitingForQuranSessionIndex = false;
+    
+    const keyboard = Markup.keyboard([
+      [t('btnQuranViewSchedule', language)],
+      [t('btnBackToTools', language)]
+    ]).resize();
+    
+    return ctx.replyWithMarkdown(message, keyboard);
+  } catch (error) {
+    ctx.session.waitingForQuranSessionIndex = false;
+    await handleError(ctx, error);
+  }
+}
+
 module.exports = {
   handleStart,
   handleHelp,
@@ -511,6 +822,15 @@ module.exports = {
   handleFeedbackInput,
   handleReminder,
   handleToggleReminder,
+  handleQuranScheduler,
+  handleQuranPagesInput,
+  handleQuranDaysInput,
+  handleQuranViewSchedule,
+  handleQuranToggleReminder,
+  handleQuranPauseSchedule,
+  handleQuranResumeSchedule,
+  handleQuranMarkComplete,
+  handleQuranSessionIndexInput,
   setGlobalCalendar,
   getGlobalCalendar,
 };

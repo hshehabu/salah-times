@@ -21,6 +21,15 @@ const {
   handleFeedbackInput,
   handleReminder,
   handleToggleReminder,
+  handleQuranScheduler,
+  handleQuranPagesInput,
+  handleQuranDaysInput,
+  handleQuranViewSchedule,
+  handleQuranToggleReminder,
+  handleQuranPauseSchedule,
+  handleQuranResumeSchedule,
+  handleQuranMarkComplete,
+  handleQuranSessionIndexInput,
 } = require('./commandHandlers');
 
 async function handleTextMessage(ctx) {
@@ -37,6 +46,9 @@ async function handleTextMessage(ctx) {
   let waitingForBirthDate = ctx.session.waitingForBirthDate;
   let waitingForFeedback = ctx.session.waitingForFeedback;
   let waitingForLocation = ctx.session.waitingForLocation;
+  let waitingForQuranPages = ctx.session.waitingForQuranPages;
+  let waitingForQuranDays = ctx.session.waitingForQuranDays;
+  let waitingForQuranSessionIndex = ctx.session.waitingForQuranSessionIndex;
   
   if (savedCity === null) {
     savedCity = ctx.session.savedCity;
@@ -51,6 +63,9 @@ async function handleTextMessage(ctx) {
     ctx.session.waitingForBirthDate = false;
     ctx.session.waitingForFeedback = false;
     ctx.session.waitingForLocation = false;
+    ctx.session.waitingForQuranPages = false;
+    ctx.session.waitingForQuranDays = false;
+    ctx.session.waitingForQuranSessionIndex = false;
     ctx.session.currentMenu = null;
     return await handleStart(ctx);
   }
@@ -61,6 +76,9 @@ async function handleTextMessage(ctx) {
     ctx.session.waitingForBirthDate = false;
     ctx.session.waitingForFeedback = false;
     ctx.session.waitingForLocation = false;
+    ctx.session.waitingForQuranPages = false;
+    ctx.session.waitingForQuranDays = false;
+    ctx.session.waitingForQuranSessionIndex = false;
     ctx.session.currentMenu = null;
     return await handlePrayerTimesMenu(ctx, language);
   }
@@ -71,6 +89,9 @@ async function handleTextMessage(ctx) {
     ctx.session.waitingForBirthDate = false;
     ctx.session.waitingForFeedback = false;
     ctx.session.waitingForLocation = false;
+    ctx.session.waitingForQuranPages = false;
+    ctx.session.waitingForQuranDays = false;
+    ctx.session.waitingForQuranSessionIndex = false;
     ctx.session.currentMenu = null;
     return await handleOtherToolsMenu(ctx, language);
   }
@@ -94,6 +115,18 @@ async function handleTextMessage(ctx) {
   if (waitingForLocation) {
     // If user sends text instead of location, show error
     return ctx.reply(t('pleaseShareLocation', language) || 'Please share your location to find nearby masjids.');
+  }
+  
+  if (waitingForQuranPages) {
+    return await handleQuranPagesInput(ctx, text, language);
+  }
+  
+  if (waitingForQuranDays) {
+    return await handleQuranDaysInput(ctx, text, language);
+  }
+  
+  if (waitingForQuranSessionIndex) {
+    return await handleQuranSessionIndexInput(ctx, text, language);
   }
   
   if (text.startsWith('🕌 Get Times for ') || text.startsWith('🕌 ጊዜዎች አግኝ ለ ') || text.startsWith('🕌 احصل على الأوقات لـ ')) {
@@ -140,6 +173,35 @@ async function handleTextMessage(ctx) {
   
   if (text === '💰 Zakah Calculator' || text === '💰 ዘካ ካልኩሌተር' || text === '💰 حاسبة الزكاة') {
     return await handleZakahCalculator(ctx, language);
+  }
+  
+  if (text === t('btnQuranScheduler', language)) {
+    return await handleQuranScheduler(ctx, language);
+  }
+  
+  if (text === t('btnQuranViewSchedule', language)) {
+    return await handleQuranViewSchedule(ctx, language);
+  }
+  
+  if (text === t('btnQuranEnableReminder', language) || text === t('btnQuranDisableReminder', language)) {
+    return await handleQuranToggleReminder(ctx, language);
+  }
+  
+  if (text === t('btnQuranPauseSchedule', language)) {
+    return await handleQuranPauseSchedule(ctx, language);
+  }
+  
+  if (text === t('btnQuranResumeSchedule', language)) {
+    return await handleQuranResumeSchedule(ctx, language);
+  }
+  
+  if (text === t('btnQuranNewSchedule', language)) {
+    ctx.session.waitingForQuranPages = true;
+    return await handleQuranScheduler(ctx, language);
+  }
+  
+  if (text === t('btnQuranMarkComplete', language)) {
+    return await handleQuranMarkComplete(ctx, language);
   }
   
   if (text === '🕌 Nearby Masjids' || text === '🕌 ቅርብ መስጂዶች' || text === '🕌 المساجد القريبة') {

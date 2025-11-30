@@ -27,6 +27,11 @@ const config = {
       language: 'en',
       waitingForDate: false,
       calendar: null,
+      waitingForQuranPages: false,
+      waitingForQuranDays: false,
+      waitingForQuranSessionIndex: false,
+      quranStartPage: null,
+      quranEndPage: null,
     }),
   },
 
